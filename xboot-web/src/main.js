@@ -6,6 +6,7 @@ import { createPinia } from 'pinia';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
 import * as Icons from '@ant-design/icons-vue'
+import {useGlobalStore} from '@/store/global'
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -16,5 +17,18 @@ Object.keys(Icons).forEach(key=>{
 
 app.use(Antd)
 app.use(pinia)
-app.use(router)
-app.mount('#app')
+
+// 加载菜单
+const global = useGlobalStore()
+global.loadUserRouter().then(()=>{
+  render()
+}).catch(()=>{
+  render()
+})
+
+const render = ()=>{
+  app.use(router)
+  document.body.removeChild(document.getElementById('loading'))
+  app.mount('#app')
+}
+

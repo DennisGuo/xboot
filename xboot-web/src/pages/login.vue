@@ -23,6 +23,12 @@
               </a-input>
             </a-form-item>
             <a-form-item>
+              <a-flex gap="small">
+                <a-input v-model:value="form.code" placeholder="验证码" style="flex:1;" />
+                <a @click="loadCaptcha" v-if="captcha"><img :src="captcha.image" style="height: 32px;" /></a>
+              </a-flex>
+            </a-form-item>
+            <a-form-item>
               <a-button type="primary" html-type="submit">登录</a-button>
             </a-form-item>
           </a-form>
@@ -35,18 +41,26 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store/global'
 import dayjs from 'dayjs'
 import p5 from 'p5'
 import Clouds from 'vanta/dist/vanta.clouds.min'
 import * as THREE from 'three'
+import { getCaptcha, login } from '../api/user'
+import { message } from 'ant-design-vue'
+import { md5 } from 'js-md5';
+
 const global = useGlobalStore()
 const form = reactive({})
 const bgRef = ref(null)
 const date = dayjs().format('YYYY')
+const router = useRouter()
+const captcha = ref(null)
 
 onMounted(() => {
   initBg()
+  loadCaptcha()
 })
 const initBg = () => {
   Clouds({
@@ -59,7 +73,44 @@ const initBg = () => {
     backgroundColor: '#071c3b',
   })
 }
-const handleSubmit = () => { }
+const loadCaptcha = async () => {
+  const res = await getCaptcha()
+  if (res && res.success) {
+    captcha.value = res.data;
+  }
+}
+const handleSubmit = async () => {
+  const { username, password, code } = form
+  if (!username) {
+    message.error('请输入用户名')
+    return
+  }
+  if (!password) {
+    message.error('请输入密码')
+    return
+  }
+  if (!code) {
+    message.error('请输入验证码')
+    return
+  }
+  const pay = {
+    username,
+    password: md5(password),
+    code,
+    random: captcha.value.random
+  }
+  const res = await login(pay)
+  if (res && res.data) {
+    global.saveToken(res.data)
+    // 根据登录用户权限动态构建路由
+    const to = await global.loadUserRouter()
+    router.push(to)
+  } else{
+    loadCaptcha()
+  }
+  
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -99,11 +150,13 @@ const handleSubmit = () => { }
 
       .slogan {
         margin-bottom: 36px;
-      }      
-      .copyright{
+      }
+
+      .copyright {
         opacity: .5;
       }
     }
 
   }
-}</style>
+}
+</style>

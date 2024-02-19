@@ -9,3 +9,7 @@
 - less
 - pinia
 - vue-router
+
+## 说明
+
+- 默认登录用户密码：admin/qwer1234

@@ -9,7 +9,7 @@ const locale = zhCN
 const global = useGlobalStore()
 
 onMounted(() => {
-  document.title = global.site.title
+  document.title = global.site.title  
 })
 
 </script>
