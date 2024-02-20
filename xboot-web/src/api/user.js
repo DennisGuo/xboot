@@ -1,4 +1,4 @@
-import { get,post, put } from "./http"
+import { get,post, put ,del} from "./http"
 
 /**
  * 获取验证码
@@ -56,4 +56,22 @@ export const saveUser = (data)=>{
  */
 export const changeMePassword = (data)=>{
   return put(`/api/user/me/password`,data)
+}
+/**
+ * 列表查询用户
+ * @param {*} params 
+ * @returns 
+ */
+export const listUser = (params)=>{
+  const url = `/api/user/list`
+  return get(url,params)
+}
+/**
+ * 删除用户
+ * @param {*} id 
+ * @returns 
+ */
+export const removeUser = (id)=>{
+  const url = `/api/user/${id}`
+  return del(url)
 }

@@ -23,12 +23,15 @@ const global = useGlobalStore()
 global.loadUserRouter().then(()=>{
   render()
 }).catch(()=>{
-  render()
+  render(true)
 })
 
-const render = ()=>{
+const render = (login=false)=>{
   app.use(router)
   document.body.removeChild(document.getElementById('loading'))
   app.mount('#app')
+  if(login){
+    router.push({ name: "login", query: { redirect: router.currentRoute.value.path } });
+  }
 }
 

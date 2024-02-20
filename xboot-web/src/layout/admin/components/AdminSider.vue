@@ -39,7 +39,7 @@ const init = async () => {
   menusData.value = arr
   const menus = []
   parseMenu(arr, menus)
-  console.log(menus)
+  console.log(arr,menus)
   items.value = menus
 
   // 

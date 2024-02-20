@@ -38,7 +38,7 @@ const send = async (url, params = {}) => {
       }
       return new Promise(resolve=>resolve(json))
     } else if (status == 403) {
-      if(window.location.hash != 'login'){
+      if(router.currentRoute.value.name != 'login'){
         router.push({ name: "login", query: { redirect: router.currentRoute.value.path } });
       }
       return Promise.reject(''+status);
@@ -51,8 +51,21 @@ const send = async (url, params = {}) => {
 };
 
 // Define function to make GET requests
-export async function get(url) {
-  return await send(url);
+export async function get(url,params=null) {
+  let arr = []
+  if(params){
+    for(const key in params){
+      let val = params[key]
+      if(val){
+        arr.push(`${key}=${val}`)
+      }
+    }
+  }
+  let furl = url
+  if(arr.length > 0){
+    furl += (url.indexOf('?') >= 0 ? '&' : '?') + arr.join('&')
+  }
+  return await send(furl);
 }
 export async function getBlob(url) {
   return await send(url,{
