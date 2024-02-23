@@ -48,7 +48,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import { listUser, removeUser } from '@/api/user'
 import { confirm } from '@/mixin'
-import { Modal, message } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import UserDrawer from '@/components/UserDrawer.vue'
 
 const columns = [
@@ -106,9 +106,9 @@ const pagination = reactive({
 })
 const rows = ref([])
 const loading = ref(false)
-const search = ref(false)
 const modal = ref(false)
 const crtItem = ref(null)
+const search = ref(false)
 const searchState = reactive({})
 
 

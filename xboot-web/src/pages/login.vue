@@ -41,7 +41,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter ,useRoute } from 'vue-router'
 import { useGlobalStore } from '@/store/global'
 import dayjs from 'dayjs'
 import p5 from 'p5'
@@ -56,6 +56,7 @@ const form = reactive({})
 const bgRef = ref(null)
 const date = dayjs().format('YYYY')
 const router = useRouter()
+const route = useRoute()
 const captcha = ref(null)
 
 onMounted(() => {
@@ -104,7 +105,11 @@ const handleSubmit = async () => {
     global.saveToken(res.data)
     // 根据登录用户权限动态构建路由
     const to = await global.loadUserRouter()
-    router.push(to)
+    if(route.query.redirect){
+      router.push({path: route.query.redirect})
+    }else{
+      router.push(to)
+    }
   } else{
     loadCaptcha()
   }

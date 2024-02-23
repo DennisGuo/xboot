@@ -3,11 +3,11 @@
     <a-layout-sider :collapsed="global.siderCollapsed">
       <AdminSider />
     </a-layout-sider>
-    <a-layout>
+    <a-layout class="h100">
       <a-layout-header style=" padding-left: 5px;">
         <AdminHeader />
       </a-layout-header>
-      <a-layout-content>
+      <a-layout-content style="overflow-y: auto;">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
