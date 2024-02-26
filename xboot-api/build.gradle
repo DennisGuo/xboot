@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'cn.ghx.xboot'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+//    mavenCentral()
+    mavenLocal()
+    maven {url 'https://mirrors.huaweicloud.com/repository/maven/'}
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // fix @EnableWebSecurity(debug = true) 引起的问题
+    implementation 'org.springframework.security:spring-security-config:6.2.2'
+
+    runtimeOnly 'org.flywaydb:flyway-core:9.22.3' // 这个匹配springboot版本
+    implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.5'
+    implementation 'org.redisson:redisson:3.26.0'
+    // hutool
+    def hutoolVersion = '5.8.25'
+    implementation "cn.hutool:hutool-core:${hutoolVersion}"
+    implementation "cn.hutool:hutool-crypto:${hutoolVersion}"
+    implementation "cn.hutool:hutool-jwt:${hutoolVersion}"
+    implementation "cn.hutool:hutool-captcha:${hutoolVersion}"
+
+
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

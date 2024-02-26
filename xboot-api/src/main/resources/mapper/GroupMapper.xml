@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ghx.xboot.mapper.GroupMapper">
+
+    <insert id="addUser">
+        insert into t_group_user(user_id, group_id) values
+        <foreach collection="userIds" item="item" index="index" separator=",">
+            (#{item}, #{id})
+        </foreach>
+        on conflict (user_id,group_id) do nothing
+    </insert>
+    <delete id="removeUser">
+        delete from  t_group_user where group_id = #{id} and user_id in
+        <foreach collection="userIds" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ghx.xboot.mapper.MenuMapper">
+
+    <select id="query" resultType="cn.ghx.xboot.menu.Menu">
+        select m.* , p.name as pName from t_menu m
+        left join t_menu p on (m.pid = p.id)
+        <where>
+            <if test="keyword != null and path != ''">
+                and ( m.name like concat('%',#{keyword},'%') or m.code like concat('%',#{keyword},'%') )
+            </if>
+        </where>
+        order by m.pid,m.sort,m.code, m.create_time desc
+    </select>
+</mapper>

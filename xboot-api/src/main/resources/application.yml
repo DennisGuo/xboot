@@ -1,0 +1,41 @@
+server:
+  port: ${SERVER_PORT:8808}
+app:
+  jwt:
+    secret: ${JWT_SECRET:6fcef78af45f482e81d529aacc36bd24}
+    expired: ${JWT_EXPIRED:7200}
+    expired_refresh: ${JWT_EXPIRED_REFRESH:72000}
+  captcha:
+    expired: ${CAPTCHA_EXPIRED:60}
+  security:
+    ignores:
+      - "/user/login"
+      - "/user/logout"
+      - "/user/captcha"
+      - "/attach/file/*"
+  storage:
+    path: ${STORAGE_PATH:D:\tmp\storage}
+spring:
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 300MB
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${PG_HOST:127.0.0.1}:${PG_PORT:5432}/${PG_DB:xboot}
+    username: ${PG_USERNAME:xboot}
+    password: ${PG_PASSWORD:xboot@1234.}
+  flyway:
+    baseline-on-migrate: true
+redis:
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+  database: ${REDIS_DB:0}
+  password: ${REDIS_PASSWORD:guohengxi}
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+    cn.ghx: debug
+    org.springframework.security: debug
