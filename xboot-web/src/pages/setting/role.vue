@@ -135,7 +135,7 @@ const saveMenu = ()=>{
 }
 
 const removeUser = (user) => {
-  confirm(`您确定要将用户【${user.name || user.username}】移除【${crtItem.value.name}】角色吗？`, async () => {
+  confirm(`您确定要将用户【${user.name || user.username}】移出吗？`, async () => {
     const res = await removeRoleUser(crtItem.value.id, [user.id])
     if (res.data) {
       message.success('移除成功！')
@@ -210,7 +210,7 @@ const onUserChecked = (users)=>{
 }
 // 移除角色用户
 const toRemoveUser =()=>{
-  confirm(`您确定要移除所选的【${checkedUser.value.length}】位用户角色吗？`,async ()=>{
+  confirm(`您确定要移出所选的【${checkedUser.value.length}】位用户角色吗？`,async ()=>{
     const res = await removeRoleUser(crtItem.value.id,checkedUser.value.map(i=>i.id))
     if(res.data){
       message.success('移除成功！')

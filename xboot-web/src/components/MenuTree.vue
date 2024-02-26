@@ -1,4 +1,5 @@
 <template>
+  <a-spin :spinning="loading">
   <a-tree v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys" v-model:checkedKeys="checkedKeys"
     checkable :treeData="treeData" :fieldNames="fieldNames" :showLine="true" :checkStrictly="true" @check="onCheck">
     <template #title="{ name, code }">
@@ -6,6 +7,7 @@
       <span>{{ name }} </span>
     </template>
   </a-tree>
+</a-spin>
 </template>
 
 <script setup>
@@ -19,6 +21,7 @@ const fieldNames = {
   title: 'name',
   key: 'id'
 }
+const loading = ref(false)
 const treeData = ref([])
 const expandedKeys = ref([])
 const selectedKeys = ref([])
@@ -38,7 +41,9 @@ const parseProps = ()=>{
 }
 
 const load = async () => {
+  loading.value = true
   const res = await getMenuTree();
+  loading.value = false
   const arr = res.data || []
   treeData.value = arr
 
@@ -49,6 +54,11 @@ const load = async () => {
 const onCheck = ({checked})=>{
   emit('checked', checked)
 }
+
+
+defineExpose({
+  refresh: load,
+})
 
 </script>
 
