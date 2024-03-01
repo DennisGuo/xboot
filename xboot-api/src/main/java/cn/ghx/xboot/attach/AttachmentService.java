@@ -32,7 +32,7 @@ public class AttachmentService extends ServiceImpl<AttachmentMapper, Attachment>
     public Attachment upload(String path, MultipartFile mfile) throws IOException {
         String filename= mfile.getOriginalFilename();
         if(!StringUtils.hasText(path)){
-            path = DateUtil.format(new Date(),"yyyy/MM/DD");
+            path = DateUtil.format(new Date(),"yyyy/MM/dd");
         }
         path += "/" + filename;
         File file = new File(storagePath,path);

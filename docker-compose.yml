@@ -1,0 +1,36 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    container_name: xboot-postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=xboot1234
+      - POSTGRES_DB=xboot
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/pgdata
+  redis:
+    image: redis
+    container_name: xboot-redis
+    restart: always
+    command: redis-server --bind 0.0.0.0 --requirepass xboot1234
+  xboot-api:
+    image: dennisguo/xboot-api:latest
+    container_name: xboot-api
+    restart: always
+    environment:
+      - PG_HOST=postgres
+      - PG_DB=xboot
+      - PG_USERNAME=postgres
+      - PG_PASSWORD=xboot1234
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=xboot1234
+    volumes:
+      - ./storage:/data/storage
+  xboot-web:
+    image: dennisguo/xboot-web:latest
+    container_name: xboot-web
+    restart: always
+    ports:
+      - 18801:80

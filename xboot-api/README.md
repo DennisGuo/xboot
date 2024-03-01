@@ -10,7 +10,12 @@
 ## 编译
 
 ```shell
-./gradlew build -x test 
+# 打包jar 
+./gradlew bootJar -x test
+
+# 打包docker 
+
+docker built -t  
 ```
 
 ## 数据库初始化
@@ -34,3 +39,10 @@ redis :// [[username :] password@] host [:port][/database]
           [?[timeout=timeout[d|h|m|s|ms|us|ns]] [&clientName=clientName]
           [&libraryName=libraryName] [&libraryVersion=libraryVersion] ]
 ```
+
+## 部署方式
+
+推荐使用 Docker 运行部署
+
+
+

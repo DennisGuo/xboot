@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:8808}
+  port: ${SERVER_PORT:18808}
 app:
   jwt:
     secret: ${JWT_SECRET:6fcef78af45f482e81d529aacc36bd24}
@@ -12,6 +12,7 @@ app:
       - "/user/login"
       - "/user/logout"
       - "/user/captcha"
+      - "/user/token/refresh"
       - "/attach/file/*"
   storage:
     path: ${STORAGE_PATH:D:\tmp\storage}
@@ -27,11 +28,17 @@ spring:
     password: ${PG_PASSWORD:xboot@1234.}
   flyway:
     baseline-on-migrate: true
-redis:
-  host: ${REDIS_HOST:localhost}
-  port: ${REDIS_PORT:6379}
-  database: ${REDIS_DB:0}
-  password: ${REDIS_PASSWORD:guohengxi}
+  jackson:
+    date-format: 'yyyy-MM-dd HH:mm:ss'
+    time-zone: Asia/Shanghai
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DB:1}
+      password: ${REDIS_PASSWORD:guohengxi}
+      ssl:
+        enabled: false
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

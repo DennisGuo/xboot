@@ -44,7 +44,7 @@ export const findItemInTree = (arr,filter)=>{
   return null
 }
 
-export const confirm = (msg,callback) =>{
+export const confirm = (msg,callback,cancelCall) =>{
   Modal.confirm({
     title: '请确认',    
     content: msg,
@@ -52,7 +52,21 @@ export const confirm = (msg,callback) =>{
       callback(true);
     },
     onCancel() {
-      
+      cancelCall && cancelCall()
     },
   });
 }
+
+/**
+ * 保存token信息
+ * @param {*} res 
+ */
+export const saveToken = (res) => {
+  const { accessToken, refreshToken, expiredIn } = res;
+  window.localStorage.setItem(KEY_AC_TOKEN, accessToken);
+  window.localStorage.setItem(KEY_RF_TOKEN, refreshToken);
+  window.localStorage.setItem(
+    KEY_EX_TIME,
+    new Date().getTime() + expiredIn * 1000
+  );
+};

@@ -20,6 +20,7 @@
 <script setup>
 import { ref,reactive } from 'vue'
 import UserTable from './UserTable.vue';
+import { message } from 'ant-design-vue';
 
 const emit = defineEmits(['ok','close'])
 

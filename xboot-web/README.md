@@ -13,3 +13,17 @@
 ## 说明
 
 - 默认登录用户密码：admin/qwer1234
+
+## 打包编译
+
+```shell
+# 安装依赖
+yarn 
+
+# 启动测试服务
+yarn dev
+
+# 打包
+yarn build
+
+```

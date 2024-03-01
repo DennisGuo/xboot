@@ -13,9 +13,12 @@
         <span v-else>-</span>
       </template>
       <template v-if="column.dataIndex === 'remark'">
-        <a-popover v-if="action == false" :content="record.remark">
-          <a>查看</a>
-        </a-popover>
+        <template v-if="action == false">
+          <a-popover :content="record.remark" v-if="record.remark">
+            <a>查看</a>
+          </a-popover>
+          <span v-else>-</span>
+        </template>
         <span v-else>{{ record.remark }}</span>
       </template>
       <template v-if="column.key === 'action'">

@@ -19,10 +19,30 @@
 - 轻量：只保留核心功能
 - 灵活：可以在此系统上灵活的扩展出灵活的业务功能
 
+## 快速部署
+
+
+使用 docker compose 启动
+
+- [docker-compose.yml](./docker-compose.yml)
+
+```shell
+# 进入docker-compose.yml的目录
+docker compose up -d
+# 访问映射的端口默认：18801
+curl -i http://localhost:18801
+```
+
+访问地址：[http://localhost:18801](http://localhost:18801)
+账号：admin
+密码：qwer1234
+
+
 ## 项目组成
 
 - xboot-api 后台API工程
 - xboot-web 前端工程
+
 
 ### 后端依赖
 

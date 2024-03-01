@@ -34,7 +34,7 @@ dependencies {
 
     runtimeOnly 'org.flywaydb:flyway-core:9.22.3' // 这个匹配springboot版本
     implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.5'
-    implementation 'org.redisson:redisson:3.26.0'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.27.0'
     // hutool
     def hutoolVersion = '5.8.25'
     implementation "cn.hutool:hutool-core:${hutoolVersion}"

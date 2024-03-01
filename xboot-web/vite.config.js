@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "./",
+  base: "/",
   resolve: {
     alias: {
       vue: "vue/dist/vue.esm-bundler.js",
@@ -15,7 +15,7 @@ export default defineConfig({
   server:{
     proxy:{      
       '/api':{
-        target:'http://localhost:8808',
+        target:'http://localhost:18808',
         changeOrigin:true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       }
