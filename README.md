@@ -2,6 +2,8 @@
 
 一套简单的，基于springboot3.x  + vue3.x的后台系统快速开发框架。
 
+在线预览DEMO: [https://boot.x-xi.cn](https://boot.x-xi.cn)
+
 <table>
 <tr>
 <td><img src="screen1.png" width="400"/></td>
@@ -20,7 +22,6 @@
 - 灵活：可以在此系统上灵活的扩展出灵活的业务功能
 
 ## 快速部署
-
 
 使用 docker compose 启动
 
