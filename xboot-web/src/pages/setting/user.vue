@@ -100,7 +100,8 @@ const pagination = reactive({
   showSizeChanger: true,
   showQuickJumper: true,
   showTotal: (total) => `共${total}条`,
-  onChange: (page) => {
+  onChange: (page,size) => {
+    pagination.pageSize = size
     load(page)
   }
 })

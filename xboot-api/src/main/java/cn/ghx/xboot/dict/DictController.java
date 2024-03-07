@@ -13,12 +13,18 @@ public class DictController {
     public static final String POST = "";
     public static final String GET_LIST = "/list";
     public static final String DELETE = "/{id}";
+    public static final String GET_BY_CODE = "/{code}";
 
     private final DictService service;
 
     public DictController(DictService service) {
         this.service = service;
     }
+    @GetMapping(GET_BY_CODE)
+    public Result<Dict> getByCode(@PathVariable String code){
+        return Result.success(service.getByCode(code));
+    }
+
 
     @DeleteMapping(DELETE)
     public Result<Boolean> delete(@PathVariable String id){

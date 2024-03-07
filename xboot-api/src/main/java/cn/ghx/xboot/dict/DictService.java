@@ -9,6 +9,7 @@ import cn.ghx.xboot.mapper.DictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -63,6 +64,13 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
             valueService.removeBatchByIds(toRemove);
         }
         return rs;
+    }
+
+    public Dict getByCode(String code) {
+        Dict item = lambdaQuery().eq(Dict::getCode, code).one();
+        Assert.notNull(item,"字典不存在");
+        item.setValues(valueService.getByDictId(item.getId()));
+        return item;
     }
 }
 
