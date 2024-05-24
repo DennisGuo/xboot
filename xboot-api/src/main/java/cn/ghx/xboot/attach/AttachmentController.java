@@ -2,9 +2,9 @@ package cn.ghx.xboot.attach;
 
 import cn.ghx.xboot.common.Result;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 
@@ -22,8 +22,8 @@ public class AttachmentController {
     }
 
     @GetMapping(GET_FILE)
-    public void serveFile(@PathVariable String id, HttpServletResponse response) throws IOException {
-        service.serveFile(id,response);
+    public StreamingResponseBody serveFile(@PathVariable String id,HttpServletResponse response) throws IOException {
+        return service.serveFile(id,response);
     }
 
     @DeleteMapping(DELETE)

@@ -42,6 +42,9 @@ dependencies {
     implementation "cn.hutool:hutool-jwt:${hutoolVersion}"
     implementation "cn.hutool:hutool-captcha:${hutoolVersion}"
 
+    // fix DatatypeConverter
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.1'
+
 
 
     compileOnly 'org.projectlombok:lombok'
