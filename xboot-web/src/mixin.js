@@ -23,7 +23,7 @@ export const findIdxInArr = (arr,filter)=>{
 export const findItemInArr = (arr,filter)=>{
   const idx = findIdxInArr(arr,filter);
   if(idx >= 0){
-    return arr[index]
+    return arr[idx]
   }
   return null
 }
