@@ -8,7 +8,7 @@
         select m.* , p.name as pName from t_menu m
         left join t_menu p on (m.pid = p.id)
         <where>
-            <if test="keyword != null and path != ''">
+            <if test="keyword != null">
                 and ( m.name like concat('%',#{keyword},'%') or m.code like concat('%',#{keyword},'%') )
             </if>
         </where>

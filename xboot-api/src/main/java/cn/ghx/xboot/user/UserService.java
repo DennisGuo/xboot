@@ -10,6 +10,7 @@ import cn.ghx.xboot.user.dto.CaptchaDto;
 import cn.ghx.xboot.user.dto.LoginDto;
 import cn.ghx.xboot.user.vo.ChangePasswordVo;
 import cn.ghx.xboot.user.vo.LoginVo;
+import cn.hutool.captcha.AbstractCaptcha;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
 import cn.hutool.core.util.IdUtil;
@@ -249,7 +250,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     public CaptchaDto createCaptcha() {
         String random = IdUtil.fastSimpleUUID();
-        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
+        // ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
+        AbstractCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 100, 4);
         captcha.createCode();
         String image = captcha.getImageBase64Data();
         String code = captcha.getCode();

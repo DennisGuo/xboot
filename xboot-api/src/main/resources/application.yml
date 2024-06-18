@@ -13,6 +13,7 @@ app:
       - "/user/logout"
       - "/user/captcha"
       - "/user/token/refresh"
+      - "/setting/list"
       - "/attach/file/*"
   storage:
     path: ${STORAGE_PATH:D:\tmp\storage}
