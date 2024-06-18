@@ -9,7 +9,7 @@
     <div class="content flex1"></div>
     <div class="actions">
       <a-dropdown>
-        <span class="text-white pointer">
+        <span class="text-white pointer" v-if="global.me">
           <UserOutlined /> {{ global.me.name || global.me.username }}
         </span>
         <template #overlay>

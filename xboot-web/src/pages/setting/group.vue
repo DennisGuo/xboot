@@ -4,7 +4,7 @@
     <div class="flex-row gap">
       <a-card title="机构部门" style="width:380px">
         <template #extra>
-          <a-button type="primary" @click="toAdd">添加</a-button>
+          <a-button type="primary" @click="toAdd" v-auth="`group-add`">添加</a-button>
         </template>
         <GroupTree ref="groupTreeRef" @select="onSelect" @load="onLoadTree"/>
       </a-card>
@@ -12,8 +12,8 @@
         <a-card title="基本信息" class="base-info">
           <template #extra>
             <a-space>
-              <a-button type="primary" @click="toEdit" :disabled="!crtItem" >修改</a-button>              
-              <a-button danger @click="toRemove" :disabled="!crtItem">删除</a-button>              
+              <a-button type="primary" @click="toEdit" :disabled="!crtItem" v-auth="`group-edit`">修改</a-button>              
+              <a-button danger @click="toRemove" :disabled="!crtItem" v-auth="`group-delete`">删除</a-button>              
             </a-space>
           </template>
           <a-empty description="请先选择机构部门" v-if="!crtItem"/>
@@ -27,16 +27,16 @@
         <a-card title="用户列表">
           <template #extra>
             <a-space>
-              <a-button type="primary" @click="toAddUser" :disabled="!crtItem">添加</a-button>
+              <a-button type="primary" @click="toAddUser" :disabled="!crtItem" v-auth="`group-user-add`">添加</a-button>
               <a-badge :count="checkedUser.length">
-                <a-button @click="toRemoveUser" :disabled="checkedUser.length == 0">移出</a-button>
+                <a-button @click="toRemoveUser" :disabled="checkedUser.length == 0" v-auth="`group-user-remove`">移出</a-button>
               </a-badge>
             </a-space>
           </template>
           <template v-if="crtItem">
             <UserTable ref="userTableRef" class="mt" :filter="{ groupId: crtItem.id }" @checked="onUserChecked">
               <template #action="{ record }">
-                <a @click="removeUser(record)" class="text-red">移出</a>
+                <a @click="removeUser(record)" class="text-red" v-auth="`group-user-remove`">移出</a>
               </template>
             </UserTable>
           </template>

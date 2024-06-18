@@ -7,6 +7,7 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
 import * as Icons from '@ant-design/icons-vue'
 import {useGlobalStore} from '@/store/global'
+import Auth from './common/auth-directive';
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -17,6 +18,8 @@ Object.keys(Icons).forEach(key=>{
 
 app.use(Antd)
 app.use(pinia)
+
+app.directive('auth',Auth)
 
 // 加载菜单
 const global = useGlobalStore()

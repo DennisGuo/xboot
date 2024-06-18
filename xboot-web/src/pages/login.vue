@@ -5,7 +5,7 @@
       <a-flex horizontal class="login-box">
         <div class="cover" :style="`background-image: url(./images/login.png)`"></div>
         <div class="form">
-          <h2 class="h2">{{ global.site.title }}</h2>
+          <h2 class="h2">{{ title }}</h2>
           <p class="slogan">欢迎登录</p>
           <a-form layout="vertical" :model="form" @submit="handleSubmit">
             <a-form-item>
@@ -32,7 +32,7 @@
               <a-button type="primary" html-type="submit">登录</a-button>
             </a-form-item>
           </a-form>
-          <div class="copyright">{{ date }} &copy; {{ global.site.copyright }}</div>
+          <div class="copyright">{{ date }} &copy; {{ copyright }}</div>
         </div>
       </a-flex>
     </a-layout-content>
@@ -44,12 +44,10 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter ,useRoute } from 'vue-router'
 import { useGlobalStore } from '@/store/global'
 import dayjs from 'dayjs'
-import p5 from 'p5'
-import Clouds from 'vanta/dist/vanta.clouds.min'
-import * as THREE from 'three'
-import { getCaptcha, login } from '../api/user'
+import { getCaptcha, login } from '@/api/user'
 import { message } from 'ant-design-vue'
 import { md5 } from 'js-md5';
+import { COPYRIGHT, COPYRIGHT_DEFAULT, SYS_TITLE, SYS_TITLE_DEFAULT } from '@/common/const'
 
 const global = useGlobalStore()
 const form = reactive({})
@@ -58,22 +56,24 @@ const date = dayjs().format('YYYY')
 const router = useRouter()
 const route = useRoute()
 const captcha = ref(null)
+const title = ref('')
+const copyright = ref('')
 
 onMounted(() => {
-  initBg()
+  // initBg()
   loadCaptcha()
-})
-const initBg = () => {
-  Clouds({
-    el: bgRef.value,
-    THREE,
-    p5,
-    touchControls: true,
-    mouseControls: true,
-    color: '#b7e6ee',
-    backgroundColor: '#071c3b',
+
+  global.getSetting([SYS_TITLE,COPYRIGHT]).then(arr=>{
+    if(arr.length == 2){
+      title.value = arr.filter(i=>i.code == SYS_TITLE)[0].content
+      copyright.value = arr.filter(i=>i.code == COPYRIGHT)[0].content 
+    }else{
+      title.value = SYS_TITLE_DEFAULT
+      copyright.value = COPYRIGHT_DEFAULT
+    }
   })
-}
+})
+
 const loadCaptcha = async () => {
   const res = await getCaptcha()
   if (res && res.success) {
@@ -128,6 +128,10 @@ const handleSubmit = async () => {
     left: 0;
     right: 0;
     bottom: 0;
+    background-image: url('/images/login-bg.jpg');
+    background-size: cover;
+    background-position: left bottom;
+    background-repeat: no-repeat;
   }
 
   .login-box {

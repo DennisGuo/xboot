@@ -1,4 +1,5 @@
 import { Modal } from 'ant-design-vue';
+import { KEY_AC_TOKEN, KEY_EX_TIME, KEY_RF_TOKEN } from './common/const';
 
 /**
  * 从数组中筛选出符合条件的
@@ -70,3 +71,17 @@ export const saveToken = (res) => {
     new Date().getTime() + expiredIn * 1000
   );
 };
+
+
+/**
+ * 遍历树形数组
+ */
+export const loopTree = (arr,func)=>{
+  for(let i=0;i<arr.length;i++){
+    const it = arr[i];
+    func(it);
+    if(it.children && it.children.length>0){
+      loopTree(it.children,func);
+    }
+  }
+}

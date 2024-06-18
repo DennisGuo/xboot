@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { KEY_AC_TOKEN, KEY_RF_TOKEN, KEY_EX_TIME } from "../common/const";
-import * as UserApi from "../api/user";
+import { KEY_AC_TOKEN, KEY_RF_TOKEN, KEY_EX_TIME } from "@/common/const";
+import * as UserApi from "@/api/user";
+import { listSetting } from "@/api/setting"
 import router from "@/router";
+import { loopTree, saveToken } from '@/mixin'
 // 匹配views里面所有的.vue文件
 const modules = import.meta.glob("@/pages/**/*.vue");
 
 export const useGlobalStore = defineStore("global", () => {
-  const config = window._CONFIG || {};
-  const site = config.site || {};
 
   // 侧边栏是否收起
   const siderCollapsed = ref(false);
@@ -16,20 +16,9 @@ export const useGlobalStore = defineStore("global", () => {
   const me = ref(null);
   // 当前菜单目录
   const meMenu = ref([]);
+  // 所有配置
+  const settings = ref([]);
 
-  /**
-   * 保持登录token
-   * @param {*} res
-   */
-  const saveToken = (res) => {
-    const { accessToken, refreshToken, expiredIn } = res;
-    window.localStorage.setItem(KEY_AC_TOKEN, accessToken);
-    window.localStorage.setItem(KEY_RF_TOKEN, refreshToken);
-    window.localStorage.setItem(
-      KEY_EX_TIME,
-      new Date().getTime() + expiredIn * 1000
-    );
-  };
 
   /**
    * 获取当前用户
@@ -139,24 +128,81 @@ export const useGlobalStore = defineStore("global", () => {
   };
 
   // 退出登录
-  const logout = async ()=>{
+  const logout = async () => {
     await UserApi.logout()
     const ls = window.localStorage
     ls.removeItem(KEY_AC_TOKEN)
     ls.removeItem(KEY_RF_TOKEN)
     ls.removeItem(KEY_EX_TIME)
-    router.push({name: 'login'})
+    me.value = null 
+    router.push({ name: 'login' })
   }
+
+  // 获取所有配置
+
+  const getSettings = () => {
+    return new Promise(resolve => {
+      if (settings.value.length > 0) {
+        resolve(settings.value)
+      } else {
+        listSetting({size: 1000}).then(res => {
+          settings.value = res.data.records || [];
+          resolve(settings.value)
+        })
+      }
+    })
+  }
+  // 根据code获取配置
+  const getSetting = codes => {
+    return new Promise(resolve => {
+      getSettings().then(values => {
+        const arr = values.filter(item => {
+          if (typeof codes == 'string') {
+            return item.code == codes
+          } else {
+            return codes.indexOf(item.code) >= 0
+          }
+        })
+        if (typeof codes == 'string') {
+          const rs = arr.length > 0 ? arr[0] : null
+          resolve(rs)
+        } else {
+          resolve(arr)
+        }
+      })
+    })
+  }
+
+  /**
+   * 判断是否具有这个key的权限
+   * @param {*} key 
+   * @returns 
+   */
+  const hasAuth = (key)=>{
+    return new Promise(async (resolve)=>{
+      const menus = await getMeMenu()
+      const codes = []
+      loopTree(menus,m=>codes.push(m.code))
+      if (codes.includes(key)) {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+  }
+
 
   return {
     me,
     meMenu,
-    site,
     siderCollapsed,
     saveToken,
     getMe,
     getMeMenu,
     loadUserRouter,
     logout,
+    getSetting,
+    getSettings,
+    hasAuth,
   };
 });

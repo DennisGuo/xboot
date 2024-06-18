@@ -16,7 +16,7 @@
         </a-form>
       </div>
       <a-space>
-        <a-button type="primary" @click="toAdd">新增</a-button>
+        <a-button type="primary" @click="toAdd" v-auth="`menu-add`">新增</a-button>
         <a-button @click="refresh">刷新</a-button>
       </a-space>
     </div>
@@ -35,8 +35,8 @@
         </template>
         <template v-if="column.key === 'action'">
           <a-space>
-            <a @click="handleEdit(record)">编辑</a>
-            <a @click="handleRemove(record)" class="text-red">删除</a>
+            <a @click="handleEdit(record)" v-auth="`menu-edit`">编辑</a>
+            <a @click="handleRemove(record)" class="text-red" v-auth="`menu-delete`">删除</a>
           </a-space>
         </template>
       </template>

@@ -14,3 +14,26 @@ export const KEY_EX_TIME = "expiredTime"
  * 执行刷新的时间差，小于这个时间，就需要执行refresh
  */
 export const REFRESH_TIME = 30 * 1000 ;
+
+
+/**
+ * 参数code: 系统名称
+ */
+export const SYS_TITLE= "SYS_TITLE"
+export const SYS_TITLE_DEFAULT= "XBOOT"
+
+/**
+ * 参数code: 版权
+ */
+export const COPYRIGHT= "COPYRIGHT"
+export const COPYRIGHT_DEFAULT= "x-xi.cn"
+
+/**
+ * 参数code: 地图中心点
+ */
+export const MAP_CENTER= "MAP_CENTER"
+
+/**
+ * 参数code: 地图厨师层级
+ */
+export const MAP_ZOOM= "MAP_ZOOM"

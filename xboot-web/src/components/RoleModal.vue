@@ -7,6 +7,9 @@
       <a-form-item label="编码" name="code">
         <a-input v-model:value="formState.code" placeholder="请输入" />
       </a-form-item>      
+      <a-form-item label="首页路径" name="homePage">
+        <a-input v-model:value="formState.homePage" placeholder="请输入" />
+      </a-form-item>      
       <a-form-item>
         <a-space>
           <a-button type="primary" @click="toSave" :loading="saving">保存</a-button>
@@ -48,9 +51,11 @@ const parseItem = () => {
   
     formState.name = it.name
     formState.code = it.code
+    formState.homePage = it.homePage
   } else {
     formState.name = null
     formState.code = null
+    formState.homePage = null
   }
 }
 

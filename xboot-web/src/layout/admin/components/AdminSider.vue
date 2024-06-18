@@ -2,7 +2,7 @@
   <div class="sider">
     <div class="logo">
       <img :src="`/logo.png`" />
-      <div class="title flex1" v-if="!global.siderCollapsed">{{ global.site.title }}</div>
+      <div class="title flex1" v-if="!global.siderCollapsed">{{ title }}</div>
     </div>
     <a-menu mode="inline" theme="dark" :items="items" @click="onClickMenu" 
     v-model:selectedKeys="current" 
@@ -16,17 +16,22 @@ import { ref, onMounted, h, compile, watch, } from 'vue'
 import { useRoute,useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store/global';
 import { findItemInTree } from '@/mixin'
+import { SYS_TITLE, SYS_TITLE_DEFAULT } from '@/common/const';
 
 const global = useGlobalStore()
 const items = ref([])
 const menusData = ref([])
 const current = ref([])
 const openKeys = ref([])
+const title = ref('')
 
 const route = useRoute()
 const router = useRouter()
 
 onMounted(() => {
+  global.getSetting(SYS_TITLE).then(it=>{
+    title.value = it?.content || SYS_TITLE_DEFAULT
+  })
   init()
 })
 

@@ -4,7 +4,7 @@
     <div class="flex-row gap">
       <a-card title="角色列表" style="width:300px">
         <template #extra>
-          <a-button type="primary" @click="toAdd">添加</a-button>
+          <a-button type="primary" @click="toAdd" v-auth="`role-add`">添加</a-button>
         </template>
         <a-spin :spinning="loading">
           <div class="role-list">
@@ -16,9 +16,9 @@
               </div>
               <div class="actions">
                 <a-space>
-                  <EditOutlined @click.stop="toEdit(item)" class="pointer" />
+                  <EditOutlined @click.stop="toEdit(item)" class="pointer" v-auth="`role-edit`"/>
                   <a-divider type="vertical" />
-                  <DeleteOutlined @click.stop="handleRemove(item)" class="pointer" />
+                  <DeleteOutlined @click.stop="handleRemove(item)" class="pointer" v-auth="`role-delete`"/>
                 </a-space>
               </div>
             </div>
@@ -34,19 +34,19 @@
         <a-spin :spinning="fetching">
           <template v-if="tab == 'user'">
             <a-space>
-              <a-button type="primary" @click="toAddUser">添加</a-button>
-              <a-badge :count="checkedUser.length">
-                <a-button @click="toRemoveUser" :disabled="checkedUser.length == 0">移出</a-button>
+              <a-button type="primary" @click="toAddUser" v-auth="`role-user-add`">添加</a-button>
+              <a-badge :count="checkedUser.length" v-auth="`role-user-remove`">
+                <a-button @click="toRemoveUser" :disabled="checkedUser.length == 0" >移出</a-button>
               </a-badge>
             </a-space>
             <UserTable ref="userTableRef" class="mt" :filter="{ roleId: crtItem.id }" @checked="onUserChecked">
               <template #action="{ record }">
-                <a @click="removeUser(record)" class="text-red">移出</a>
+                <a @click="removeUser(record)" class="text-red" v-auth="`role-user-remove`">移出</a>
               </template>
             </UserTable>
           </template>
           <template v-if="tab == 'menu'">
-            <a-space>
+            <a-space v-auth="`role-auth`">
               <a-button type="primary" @click="saveMenu">保存</a-button>
             </a-space>
             <MenuTree class="mt" @checked="onMenuChecked" :checked="crtItemMenu"/>
