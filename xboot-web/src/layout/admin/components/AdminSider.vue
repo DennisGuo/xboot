@@ -4,16 +4,14 @@
       <img :src="`/logo.png`" />
       <div class="title flex1" v-if="!global.siderCollapsed">{{ title }}</div>
     </div>
-    <a-menu mode="inline" theme="dark" :items="items" @click="onClickMenu" 
-    v-model:selectedKeys="current" 
-    v-model:openKeys="openKeys" 
-    />
+    <a-menu mode="inline" theme="dark" :items="items" @click="onClickMenu" v-model:selectedKeys="current"
+      v-model:openKeys="openKeys" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, h, compile, watch, } from 'vue'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store/global';
 import { findItemInTree } from '@/mixin'
 import { SYS_TITLE, SYS_TITLE_DEFAULT } from '@/common/const';
@@ -29,7 +27,7 @@ const route = useRoute()
 const router = useRouter()
 
 onMounted(() => {
-  global.getSetting(SYS_TITLE).then(it=>{
+  global.getSetting(SYS_TITLE).then(it => {
     title.value = it?.content || SYS_TITLE_DEFAULT
   })
   init()
@@ -44,7 +42,7 @@ const init = async () => {
   menusData.value = arr
   const menus = []
   parseMenu(arr, menus)
-  console.log(arr,menus)
+  console.log(arr, menus)
   items.value = menus
 
   // 
@@ -54,10 +52,10 @@ const init = async () => {
 const parseRoute = () => {
   current.value = [route.name]
   // 判断是否需要展开上级
-  const it = findItemInTree(menusData.value, i=>i.code == route.name)
-  if(it && it.pid ){
-    const parent = findItemInTree(menusData.value, i=>i.id == it.pid)
-    if(parent){
+  const it = findItemInTree(menusData.value, i => i.code == route.name)
+  if (it && it.pid) {
+    const parent = findItemInTree(menusData.value, i => i.id == it.pid)
+    if (parent) {
       openKeys.value = [parent.code]
     }
   }
@@ -83,8 +81,8 @@ const parseMenu = (arr, menus) => {
   })
 }
 
-const onClickMenu = ({key}) => {
-  router.push({name: key})
+const onClickMenu = ({ key }) => {
+  router.push({ name: key })
 }
 
 </script>
@@ -102,6 +100,12 @@ const onClickMenu = ({key}) => {
     align-items: center;
     justify-content: center;
     gap: 12px;
+
+
+    .title {
+      word-break: keep-all;
+      text-overflow: ellipsis;
+    }
 
     img {
       height: 36px;

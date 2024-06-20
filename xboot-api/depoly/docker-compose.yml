@@ -1,0 +1,31 @@
+services:
+  redis:
+    image: redis
+    container_name: xboot-redis
+    restart: always
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: xboot-postgis
+    restart: always
+    volumes:
+      - ./pgdata:/home/postgres/pgdata
+    environment:
+      - POSTGRES_PASSWORD=em1234
+  xboot-api:
+    image: dennisguo/xboot-api:latest
+    container_name: xboot-api
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=em1234
+    volumes:
+      - ./storage:/data/storage
+  xboot-web:
+    image: dennisguo/xboot-web:latest
+    container_name: xboot-web
+    restart: always
+    ports:
+      - 8809:80

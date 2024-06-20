@@ -76,7 +76,6 @@ const columns = [
   {
     title: '名称',
     dataIndex: 'name',
-    width: 100,
   }, 
   {
     title: '编码',
