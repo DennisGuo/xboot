@@ -2,11 +2,10 @@ package cn.ghx.xboot.dict;
 
 import cn.ghx.xboot.dict.value.DictValue;
 import cn.ghx.xboot.dict.value.DictValueService;
+import cn.ghx.xboot.mapper.DictMapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import cn.ghx.xboot.mapper.DictMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -54,9 +53,11 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
         List<String> toRemove = oldValues.stream().map(DictValue::getId).filter(i->!toSaveIds.contains(i)).toList();
 
         if (!values.isEmpty()) {
+            int i = 0;
             for (DictValue v : values) {
                 v.setDictId(item.getId());
                 v.setDictCode(item.getCode());
+                v.setSort(i++);
             }
             valueService.saveOrUpdateBatch(values);
         }
