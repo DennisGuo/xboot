@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # harbor
-base="docker.wuzg.cn/em/"
+base="dennisguo/"
 # tag
 tag="latest"
 #

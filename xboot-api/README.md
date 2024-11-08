@@ -15,7 +15,7 @@
 
 # 打包docker 
 
-docker built -t  
+docker buildx build --platform=linux/amd64 -t dennisguo/xboot-api:latest . --push
 ```
 
 ## 数据库初始化

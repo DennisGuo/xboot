@@ -1,10 +1,10 @@
-FROM openjdk:17-alpine
+FROM dennisguo/xboot-api:base
 
 COPY build/libs/*SNAPSHOT.jar app.jar
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-RUN apk add --no-cache freetype msttcorefonts-installer fontconfig
-RUN update-ms-fonts
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+#RUN apk add --no-cache freetype msttcorefonts-installer fontconfig
+#RUN update-ms-fonts
 
 ENV PG_HOST="postgis"
 ENV PG_PORT=5432

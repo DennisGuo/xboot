@@ -41,6 +41,6 @@ yarn dev
 yarn build
 
 # docker 
-docker buildx build --platform=linux/arm64,linux/amd64 -t dennisguo/xboot-web:latest . --push
+docker buildx build --platform=linux/linux/amd64 -t dennisguo/xboot-web:latest . --push
 
 ```
