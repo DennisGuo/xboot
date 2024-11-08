@@ -3,19 +3,30 @@
     <div class="h2">菜单管理</div>
     <div class="padding bg-white mb flex-row">
       <div class="flex1">
+        <a-form layout="inline" :model="searchState" @finish="toSearch">
+          <a-form-item name="keyword">
+            <a-input v-model:value="searchState.keyword" placeholder="名称|编码" />
+          </a-form-item>
+          <a-form-item>
+            <a-space>
+              <a-button type="primary" html-type="submit">搜索</a-button>
+              <a-button @click="reset" v-if="search">重置</a-button>
+            </a-space>
+          </a-form-item>
+        </a-form>
       </div>
       <a-space>
         <a-button type="primary" @click="toAdd" v-auth="`menu-add`">新增</a-button>
         <a-button @click="refresh">刷新</a-button>
       </a-space>
     </div>
-    <a-table :loading="loading" :columns="columns" :data-source="rows" :row-key="r => r.id" :defaultExpandAllRows="true"
-    v-model:expandedRowKeys="expandedRowKeys"
-      :rowClassName="record => record.type == 0? 'bg-gray-100': record.type == 1? 'bg-gray-200': 'bg-gray-300'"
-      :pagination="false" bordered>
+    <a-table :loading="loading" :columns="columns" :data-source="rows" :pagination="pagination" bordered>
       <template #bodyCell="{ column, record, index }">
+        <template v-if="column.key === 'index'">
+          <span>{{ ((pagination.current - 1) * pagination.pageSize) + index + 1 }}</span>
+        </template>
         <template v-if="column.key === 'type'">
-          <a-tag :color="record.type == 0? 'blue': record.type == 1 ? 'green': undefined">{{ record.type == 0 ? '菜单' : record.type == 1 ? '页面' : '按钮' }}</a-tag>
+          <a-tag>{{ record.type == 0 ? '菜单' :  record.type == 1 ? '页面':'按钮' }}</a-tag>
         </template>
         <template v-if="column.key === 'icon'">
           <span v-if="record.icon">
@@ -31,26 +42,46 @@
       </template>
     </a-table>
   </div>
-  <MenuDrawer v-if="modal == 'menu'" :item="crtItem" @close="onCancel" @saved="onSaved" />
+  <MenuDrawer v-if="modal == 'menu'" :item="crtItem" @close="onCancel" @saved="onSaved"/>
 </template>
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
-import { getMenuTree, removeMenu } from '@/api/menu'
+import { listMenu, removeMenu } from '@/api/menu'
 import MenuDrawer from '@/components/MenuDrawer.vue';
 import { confirm } from '@/mixin'
 
 const modal = ref(null)
 const crtItem = ref(null)
+const search = ref(false)
 const loading = ref(false)
 const rows = ref([])
-const expandedRowKeys = ref([])
+const searchState = reactive({})
+const pagination = reactive({
+  pageSize: 10,
+  current: 1,
+  total: 0,
+  showSizeChanger: true,
+  showQuickJumper: true,
+  showTotal: (total) => `共${total}条`,
+  onChange: (page,size) => {
+    pagination.pageSize = size
+    load(page)
+  }
+})
+
 const columns = [
+  {
+    title: '序号',
+    key: 'index',
+    width: 80,
+    align: 'center'
+  }, 
   {
     title: '名称',
     dataIndex: 'name',
-    width: 220,
+    width: 100,
   },
   {
     title: '类型',
@@ -60,7 +91,12 @@ const columns = [
   {
     title: '编码',
     dataIndex: 'code',
-    width: 180
+    width: 100
+  },
+  {
+    title: '上级',
+    dataIndex: 'pname',
+    width: 100
   },
   {
     title: '路径',
@@ -74,13 +110,11 @@ const columns = [
     title: '图标',
     key: 'icon',
     width: 80,
-    align: 'center'
   },
   {
     title: '排序',
     dataIndex: 'sort',
     width: 80,
-    align: 'center'
   },
   {
     title: '操作',
@@ -92,17 +126,39 @@ const columns = [
 
 
 onMounted(() => {
-  load()
+  load(1)
 })
+const reset = () => {
+  searchState.keyword = null
+  search.value = false
+  load(1)
+}
+const toSearch = () => {
+  search.value = true;
+  load(1)
+}
 
-
-const load = async () => {
+const load = async (page = 1) => {
+  const params = {
+    page,
+    size: pagination.pageSize,
+  }
+  if (search.value) {
+    for (const key in searchState) {
+      const val = searchState[key]
+      if (val) {
+        params[key] = val;
+      }
+    }
+  }
   loading.value = true;
-  const res = await getMenuTree();
+  const res = await listMenu(params);
   loading.value = false;
   if (res.data) {
-    rows.value = res.data || []
-    expandedRowKeys.value = rows.value.filter(i=>i.type == 0 && i.children && i.children.length > 0).map(i=>i.id)
+    const { total, records } = res.data;
+    pagination.total = total
+    pagination.current = page
+    rows.value = records
   }
 }
 const toAdd = () => {
@@ -141,4 +197,6 @@ const onSaved = () => {
 
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+</style>

@@ -42,15 +42,35 @@ export const useGlobalStore = defineStore("global", () => {
    * 登录用户的菜单
    * @returns
    */
+  let meMenuLoading = ref(false)
   const getMeMenu = async () => {
-    if (meMenu.value && meMenu.length > 0) {
+    // 阻塞等待
+    if (meMenuLoading.value) {
+      // 如果方法正在执行，等待
+      const a = new Date().getTime()
+      console.log('wait get me menu start.');
+      await new Promise(resolve => {
+        const interval = setInterval(() => {
+          if (!meMenuLoading.value) {
+            clearInterval(interval);
+            resolve();
+          }
+        }, 100);
+      });
+      const b = new Date().getTime()
+      console.log(`wait get me menu end (${b-a})ms.`);
+    }
+    if (meMenu.value && meMenu.value.length > 0) {
       return meMenu.value;
     } else {
+      meMenuLoading.value = true
       const res = await UserApi.getMeMenu();
       if (res.data) {
         meMenu.value = res.data;
+        meMenuLoading.value = false;
         return res.data;
       } else {
+        meMenuLoading.value = false;
         return [];
       }
     }
@@ -134,7 +154,7 @@ export const useGlobalStore = defineStore("global", () => {
     ls.removeItem(KEY_AC_TOKEN)
     ls.removeItem(KEY_RF_TOKEN)
     ls.removeItem(KEY_EX_TIME)
-    me.value = null 
+    me.value = null
     router.push({ name: 'login' })
   }
 
@@ -145,7 +165,7 @@ export const useGlobalStore = defineStore("global", () => {
       if (settings.value.length > 0) {
         resolve(settings.value)
       } else {
-        listSetting({size: 1000}).then(res => {
+        listSetting({ size: 1000 }).then(res => {
           settings.value = res.data.records || [];
           resolve(settings.value)
         })
@@ -178,17 +198,14 @@ export const useGlobalStore = defineStore("global", () => {
    * @param {*} key 
    * @returns 
    */
-  const hasAuth = (key)=>{
-    return new Promise(async (resolve)=>{
-      const menus = await getMeMenu()
-      const codes = []
-      loopTree(menus,m=>codes.push(m.code))
-      if (codes.includes(key)) {
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
+  const hasAuth = async (key) => {
+
+    const codes = []
+
+    const menus = await getMeMenu()
+    loopTree(menus, m => codes.push(m.code))
+
+    return codes.includes(key)
   }
 
 

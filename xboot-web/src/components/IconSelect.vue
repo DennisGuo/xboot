@@ -1,12 +1,10 @@
 <template>
   <div class="icon-select">
-    <div class="actions">
-      <div class="flex1">
+    <div class="actions"> 
+      <a-space>
         <div class="selected">
           <component :is="selected" v-if="selected" />
         </div>
-      </div>
-      <a-space>
         <a-input placeholder="关键字" v-model:value="keyword" size="small"/>
         <a-radio-group v-model:value="type" button-style="solid" size="small">
           <a-radio-button value="Outlined">线框</a-radio-button>
@@ -60,12 +58,13 @@ const select = name => {
 
   .actions {
     .flex-row();
+    margin-bottom: 8px;
 
     .selected {
       width: 32px;
       height: 32px;
       border: 1px dashed #eee;
-      margin-bottom: 8px;
+      // margin-bottom: 8px;
       line-height: 32px;
       text-align: center;
       background-color: rgba(0, 0, 0, .1);

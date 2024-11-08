@@ -46,10 +46,14 @@
             </UserTable>
           </template>
           <template v-if="tab == 'menu'">
-            <a-space v-auth="`role-auth`">
-              <a-button type="primary" @click="saveMenu">保存</a-button>
+            <a-space  class="mb" direction="vertical">
+              <a-button type="primary" @click="saveMenu" v-auth="`role-auth`">保存</a-button>
+              <a-space>
+                <a-checkbox :checked="roleAllChecked" @change="onRoleCheckAllChange">全选</a-checkbox>
+                <a-checkbox :checked="roleAllExpanded" @change="onRoleExpandAllChange">全部展开</a-checkbox>
+              </a-space>
             </a-space>
-            <MenuTree class="mt" @checked="onMenuChecked" :checked="crtItemMenu"/>
+            <MenuTree class="mt" @checked="onMenuChecked" :checked="crtItemMenu" ref="menuTreeRef"/>
           </template>
         </a-spin>
         </template>
@@ -75,6 +79,9 @@ const loading = ref(false)
 const fetching = ref(false)
 const modal = ref(null)
 const userTableRef = ref(null)
+const menuTreeRef = ref(null)
+const roleAllChecked = ref(false)
+const roleAllExpanded = ref(false)
 const checkedUser = ref([])
 const crtItem = ref(null)
 const modalItem = ref(null)
@@ -119,6 +126,17 @@ const load = async (page = 1) => {
       clickItem(records[0])
     }
   }
+}
+
+const onRoleCheckAllChange = (e)=>{
+  const checked = e.target.checked
+  roleAllChecked.value = checked
+  menuTreeRef.value.selectAll(checked)
+}
+const onRoleExpandAllChange = (e)=>{
+  const checked = e.target.checked
+  roleAllExpanded.value = checked
+  menuTreeRef.value.expandAll(checked)
 }
 
 const onMenuChecked = (keys)=>{

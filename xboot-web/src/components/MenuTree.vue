@@ -1,18 +1,22 @@
 <template>
   <a-spin :spinning="loading">
-  <a-tree v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys" v-model:checkedKeys="checkedKeys"
-    checkable :treeData="treeData" :fieldNames="fieldNames" :showLine="true" :checkStrictly="true" @check="onCheck">
-    <template #title="{ name, code }">
-      <a-tag>{{ code }} </a-tag>
-      <span>{{ name }} </span>
-    </template>
-  </a-tree>
-</a-spin>
+    <a-tree v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys" v-model:checkedKeys="checkedKeys"
+      checkable :treeData="treeData" :fieldNames="fieldNames" :showLine="true" :checkStrictly="true" @check="onCheck">
+      <template #title="{ name, code ,type}">
+        <a-space>
+          <a-tag>{{ code }} </a-tag>
+          <a-tag :color="type == 0? 'blue': type == 1 ? 'green': undefined">{{ type == 0 ? '菜单' : type == 1 ? '页面' : '按钮' }}</a-tag>
+          <span>{{ name }} </span>
+        </a-space>
+      </template>
+    </a-tree>
+  </a-spin>
 </template>
 
 <script setup>
-import { ref, onMounted,watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { getMenuTree } from '@/api/menu'
+import { loopTree } from '@/mixin';
 
 const props = defineProps(['checked'])
 const emit = defineEmits(['checked'])
@@ -32,11 +36,11 @@ onMounted(() => {
   parseProps()
 })
 
-watch(()=>props.checked,()=>{
+watch(() => props.checked, () => {
   parseProps()
 })
 
-const parseProps = ()=>{   
+const parseProps = () => {
   checkedKeys.value = props.checked || []
 }
 
@@ -47,17 +51,34 @@ const load = async () => {
   const arr = res.data || []
   treeData.value = arr
 
-  expandedKeys.value = arr.filter(i=>i.children && i.children.length > 0).map(i=>i.id)
+  expandedKeys.value = arr.filter(i => i.children && i.children.length > 0).map(i => i.id)
 
 }
 
-const onCheck = ({checked})=>{
+const onCheck = ({ checked }) => {
   emit('checked', checked)
+}
+
+const selectAll = (select = true) => {
+  const allIds = [];
+  loopTree(treeData.value, i => allIds.push(i.id))
+  checkedKeys.value = select ? allIds : []
+}
+const expandAll = (select = true) => {
+  const allIds = []; 
+  loopTree(treeData.value, i => {
+    if(i.children && i.children.length > 0){
+      allIds.push(i.id)
+    }
+  })
+  expandedKeys.value = select ? allIds : []
 }
 
 
 defineExpose({
   refresh: load,
+  selectAll,
+  expandAll,
 })
 
 </script>

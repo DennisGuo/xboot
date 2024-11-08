@@ -106,8 +106,10 @@ onMounted(() => {
     ]
   }
 })
-watch(() => props.filter, () => {
-  load()
+watch(() => props.filter, (v,o) => {
+  if(JSON.stringify(v) != JSON.stringify(o)) {
+    load()
+  }
 })
 
 const load = async (page = 1) => {
