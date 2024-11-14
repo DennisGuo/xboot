@@ -110,7 +110,7 @@ const toAdd = () => {
   modal.value = 'menu'
 }
 const refresh = () => {
-  load(pagination.current)
+  load()
 }
 const onCancel = () => {
   modal.value = null
@@ -126,7 +126,7 @@ const handleRemove = item => {
     const res = await removeMenu(item.id)
     if (res.data) {
       message.success('删除成功')
-      load(pagination.current)
+      load()
     }
   })
 }
