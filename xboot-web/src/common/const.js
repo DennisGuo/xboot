@@ -27,13 +27,3 @@ export const SYS_TITLE_DEFAULT= "XBOOT"
  */
 export const COPYRIGHT= "COPYRIGHT"
 export const COPYRIGHT_DEFAULT= "x-xi.cn"
-
-/**
- * 参数code: 地图中心点
- */
-export const MAP_CENTER= "MAP_CENTER"
-
-/**
- * 参数code: 地图厨师层级
- */
-export const MAP_ZOOM= "MAP_ZOOM"

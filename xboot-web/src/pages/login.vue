@@ -1,9 +1,9 @@
 <template>
   <a-layout class="login">
     <a-layout-content class="posr">
-      <div class="canvas-bg" ref="bgRef"></div>
+      <div class="canvas-bg" ref="bgRef" :style="`background-image: url(${loginBg})`" v-if="loginBg"></div>
       <a-flex horizontal class="login-box">
-        <div class="cover" :style="`background-image: url(./images/login.png)`"></div>
+        <div class="cover" :style="`background-image: url(${loginCover})`" v-if="loginCover"></div>
         <div class="form">
           <h2 class="h2">{{ title }}</h2>
           <p class="slogan">欢迎登录</p>
@@ -58,15 +58,19 @@ const route = useRoute()
 const captcha = ref(null)
 const title = ref('')
 const copyright = ref('')
+const loginBg = ref()
+const loginCover = ref()
 
 onMounted(() => {
   // initBg()
   loadCaptcha()
-
-  global.getSetting([SYS_TITLE,COPYRIGHT]).then(arr=>{
-    if(arr.length == 2){
+  const keys = [SYS_TITLE,COPYRIGHT,'LOGIN_BG','LOGIN_COVER']
+  global.getSetting(keys).then(arr=>{
+    if(arr.length == keys.length){
       title.value = arr.filter(i=>i.code == SYS_TITLE)[0].content
       copyright.value = arr.filter(i=>i.code == COPYRIGHT)[0].content 
+      loginBg.value = arr.filter(i=>i.code == 'LOGIN_BG')[0].content
+      loginCover.value = arr.filter(i=>i.code == 'LOGIN_COVER')[0].content
     }else{
       title.value = SYS_TITLE_DEFAULT
       copyright.value = COPYRIGHT_DEFAULT
@@ -128,7 +132,7 @@ const handleSubmit = async () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/images/login-bg.jpg');
+    // background-image: url('/images/login-bg.jpg');
     background-size: cover;
     background-position: left bottom;
     background-repeat: no-repeat;
