@@ -85,3 +85,26 @@ export const loopTree = (arr,func)=>{
     }
   }
 }
+
+/**
+ * 找到符合过滤方法的树路径
+ * @param arr 
+ * @param filter 
+ */
+export const findTreePath = (arr, filter) => {
+  
+  for (let i = 0; i < arr.length; i++) {
+    const item = arr[i];
+    if (filter(item)) {
+      return [item];
+    }
+    if (item.children) {
+      const rs = findTreePath(item.children, filter);
+      if (rs.length > 0) {
+        rs.unshift(item);
+        return rs;
+      }
+    }
+  }
+  return [];
+}

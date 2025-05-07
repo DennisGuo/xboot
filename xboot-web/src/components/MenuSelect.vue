@@ -7,6 +7,7 @@
 <script setup>
 import { ref, onMounted,watch } from 'vue'
 import { getMenuTree } from '@/api/menu'
+import { findTreePath } from '@/mixin'
 
 const props = defineProps(['value'])
 const emit = defineEmits(['update:value'])
@@ -21,7 +22,7 @@ const loading = ref(false)
 
 onMounted(() => {
   init()
-  parseValue()
+  
 })
 
 watch(()=>props.value,()=>{
@@ -30,7 +31,8 @@ watch(()=>props.value,()=>{
 
 const parseValue = ()=>{
   if(props.value){
-    data.value = [props.value]
+    const arr = findTreePath(options.value,(i)=>i.id == props.value)
+    data.value = arr.map((i)=>i.id)
   }else{
     data.value = []
   }
@@ -42,6 +44,8 @@ const init = async () => {
   const res = await getMenuTree()  
   loading.value = false
   options.value = res.data || [];  
+
+  parseValue()
 }
 
 const onChange = e=>{

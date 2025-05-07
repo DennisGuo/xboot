@@ -1,5 +1,18 @@
 import { del, get,post, put } from "./http"
 
+export const menuTypeDict = {
+  0: '模块',
+  1: '菜单',
+  2: '页面',
+  3: '操作'
+}
+export const menuTypeColor = {
+  0: 'blue',
+  1: 'green',
+  2: 'orange',
+  3: 'gray'
+}
+
 /**
  * 查询菜单树
  * @param {*} params 

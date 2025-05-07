@@ -13,7 +13,7 @@
 import { ref, onMounted, h, compile, watch, } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGlobalStore } from '@/store/global';
-import { findItemInTree } from '@/mixin'
+import { findItemInArr, findItemInTree } from '@/mixin'
 import { SYS_TITLE, SYS_TITLE_DEFAULT } from '@/common/const';
 
 const global = useGlobalStore()
@@ -34,15 +34,18 @@ onMounted(() => {
 })
 
 watch(() => route.name, () => {
-  parseRoute()
+  init()
 })
 
 const init = async () => {
-  const arr = await global.getMeMenu()
+  // console.log('crtModule', global.crtModule);
+  const all = await global.getMeMenu()
+  const item = findItemInArr(all, i => i.code == global.crtModule)
+  const arr = item.children || []// all.filter(i=>i.pid == item.id)
   menusData.value = arr
   const menus = []
   parseMenu(arr, menus)
-  console.log(arr, menus)
+  // console.log(arr, menus)
   items.value = menus
 
   // 
@@ -62,22 +65,25 @@ const parseRoute = () => {
 }
 
 const parseMenu = (arr, menus) => {
-  arr.filter(i => i.type == 0 || i.type == 1).forEach(i => {
-    const item = {
-      label: i.name,
-      key: i.code,
-    }
-    if (i.icon) {
-      item.icon = () => h(compile(`<${i.icon}/>`))
-    }
-    if (i.children && i.children.length > 0) {
-      const child = []
-      parseMenu(i.children, child)
-      if (child.length > 0) {
-        item.children = child
+  arr
+  .filter(i => i.type == 1 || i.type == 2).forEach(i => {
+    if (!i.hidden) {
+      const item = {
+        label: i.name,
+        key: i.code,
       }
+      if (i.icon) {
+        item.icon = () => h(compile(`<${i.icon}/>`))
+      }
+      if (i.children && i.children.length > 0) {
+        const child = []
+        parseMenu(i.children, child)
+        if (child.length > 0) {
+          item.children = child
+        }
+      }
+      menus.push(item)
     }
-    menus.push(item)
   })
 }
 

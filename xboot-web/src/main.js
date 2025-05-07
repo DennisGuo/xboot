@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import './style.css'
 import '@/assets/common.less'
 import router from  './router'
 import { createPinia } from 'pinia';
@@ -25,7 +26,8 @@ app.directive('auth',Auth)
 const global = useGlobalStore()
 global.loadUserRouter().then(()=>{
   render()
-}).catch(()=>{
+}).catch((e)=>{
+  console.log('加载菜单失败',e)
   render(true)
 })
 

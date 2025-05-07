@@ -5,7 +5,7 @@
       <template #title="{ name, code ,type}">
         <a-space>
           <a-tag>{{ code }} </a-tag>
-          <a-tag :color="type == 0? 'blue': type == 1 ? 'green': undefined">{{ type == 0 ? '菜单' : type == 1 ? '页面' : '按钮' }}</a-tag>
+          <a-tag :color="menuTypeColor[type]">{{ menuTypeDict[type] }}</a-tag>
           <span>{{ name }} </span>
         </a-space>
       </template>
@@ -15,7 +15,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { getMenuTree } from '@/api/menu'
+import { getMenuTree, menuTypeColor, menuTypeDict } from '@/api/menu'
 import { loopTree } from '@/mixin';
 
 const props = defineProps(['checked'])

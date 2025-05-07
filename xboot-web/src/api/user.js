@@ -34,6 +34,14 @@ export const getMeMenu = ()=>{
   return get(url)
 }
 /**
+ * 获取当前用户的角色
+ * @returns 
+ */
+export const getMeRoles = ()=>{
+  const url = `/api/user/me/roles`
+  return get(url)
+}
+/**
  * 退出登录
  * @returns 
  */

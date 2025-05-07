@@ -5,6 +5,8 @@ import * as UserApi from "@/api/user";
 import { listSetting } from "@/api/setting"
 import router from "@/router";
 import { loopTree, saveToken } from '@/mixin'
+import PQueue from 'p-queue';
+
 // 匹配views里面所有的.vue文件
 const modules = import.meta.glob("@/pages/**/*.vue");
 
@@ -16,9 +18,12 @@ export const useGlobalStore = defineStore("global", () => {
   const me = ref(null);
   // 当前菜单目录
   const meMenu = ref([]);
+  // 当前用户角色
+  const meRoles = ref([]);
   // 所有配置
   const settings = ref([]);
-
+  // 当前模块
+  const crtModule = ref(null);
 
   /**
    * 获取当前用户
@@ -42,38 +47,28 @@ export const useGlobalStore = defineStore("global", () => {
    * 登录用户的菜单
    * @returns
    */
-  let meMenuLoading = ref(false)
-  const getMeMenu = async () => {
-    // 阻塞等待
-    if (meMenuLoading.value) {
-      // 如果方法正在执行，等待
-      const a = new Date().getTime()
-      console.log('wait get me menu start.');
-      await new Promise(resolve => {
-        const interval = setInterval(() => {
-          if (!meMenuLoading.value) {
-            clearInterval(interval);
-            resolve();
-          }
-        }, 100);
-      });
-      const b = new Date().getTime()
-      console.log(`wait get me menu end (${b-a})ms.`);
-    }
-    if (meMenu.value && meMenu.value.length > 0) {
-      return meMenu.value;
-    } else {
-      meMenuLoading.value = true
-      const res = await UserApi.getMeMenu();
-      if (res.data) {
-        meMenu.value = res.data;
-        meMenuLoading.value = false;
-        return res.data;
-      } else {
-        meMenuLoading.value = false;
-        return [];
+  const meMenuQueue = new PQueue({ concurrency: 1 });
+  const getMeMenu = async (refresh = false) => {
+    return await meMenuQueue.add(async () => {
+      if (meMenu.value.length == 0 || refresh) {
+        const res = await UserApi.getMeMenu();
+        meMenu.value = res?.data || [];
       }
+      return meMenu.value
+    })
+  };
+
+  /**
+   * 获取当前用户的角色
+   * @param {*} refresh 是否刷新
+   * @returns 
+   */
+  const getMeRoles = async (refresh = false) => {
+    if (meRoles.value.length == 0 || refresh) {
+      const res = await UserApi.getMeRoles();
+      meRoles.value = res?.data || [];
     }
+    return meRoles.value;
   };
 
   /**
@@ -85,8 +80,17 @@ export const useGlobalStore = defineStore("global", () => {
         const me = await getMe();
         const menus = await getMeMenu();
         let redirect = undefined;
-        if (me && me.role && me.role.homePage) {
-          redirect = me.role.homePage;
+        const roles = await getMeRoles();
+        if (me && roles.length > 0) {
+          const arr = roles.filter(i => i.homePage)
+          if (arr.length > 0) {
+            redirect = arr[0].homePage
+          } else if (menus.length > 0) {
+            const men = menus[0].path
+            if (men) {
+              redirect = men
+            }
+          }
         }
 
         let children = [];
@@ -110,7 +114,7 @@ export const useGlobalStore = defineStore("global", () => {
   };
   const parseRouter = (menus, arr) => {
     if (menus.length > 0) {
-      const target = menus.filter((i) => i.type == 0 || i.type == 1); // 0: 菜单， 1: 页面， 2: 按钮
+      const target = menus.filter((i) => i.type == 0 || i.type == 1 || i.type == 2); // 0: 模块，1: 菜单 2: 页面，3: 按钮
       for (let i = 0; i < target.length; i++) {
         const m = target[i];
         const item = {
@@ -118,9 +122,10 @@ export const useGlobalStore = defineStore("global", () => {
           name: m.code,
           meta: { requiresAuth: true }
         };
-        if (m.type == 1) {
-          item.component = getComponent(m.component);
-        } else if (m.type == 0) {
+        if (m.type == 2 || m.component) {
+          const cpath = m.component || `pages/${m.path}`
+          item.component = getComponent(cpath);
+        } else if (m.type == 0 || m.type == 1) {
           item.component = { template: `<router-view/>` };
           if (m.children && m.children.length > 0) {
             const children = [];
@@ -213,6 +218,7 @@ export const useGlobalStore = defineStore("global", () => {
     me,
     meMenu,
     siderCollapsed,
+    crtModule,
     saveToken,
     getMe,
     getMeMenu,
