@@ -3,6 +3,7 @@ package cn.ghx.xboot.user;
 import cn.ghx.xboot.common.BaseContext;
 import cn.ghx.xboot.common.Result;
 import cn.ghx.xboot.menu.Menu;
+import cn.ghx.xboot.role.Role;
 import cn.ghx.xboot.user.dto.CaptchaDto;
 import cn.ghx.xboot.user.dto.LoginDto;
 import cn.ghx.xboot.user.group.UserGroup;
@@ -27,6 +28,7 @@ public class UserController {
     public static final String POST_TOKEN_REFRESH = "/token/refresh";
     public static final String GET_LOGOUT = "/logout";
     public static final String GET_ME_MENU = "/me/menu";
+    public static final String GET_ME_ROLES = "/me/roles";
     public static final String GET_LIST = "/list";
     public static final String POST = "";
 
@@ -67,7 +69,10 @@ public class UserController {
     public Result<List<Menu>> getMeMenu(@RequestParam(required = false) Boolean tree){
         return Result.success(service.getMeMenu(tree));
     }
-
+    @GetMapping(GET_ME_ROLES)
+    public Result<List<Role>> getMeRoles() {
+        return Result.success(service.getMeRoles());
+    }
     @GetMapping(GET_ME)
     public Result<User> getMe(){
         return Result.success(BaseContext.getUser());

@@ -1,7 +1,20 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {url 'https://mirrors.huaweicloud.com/repository/maven/'}
+        mavenCentral()
+    }
+    dependencies {
+        def flywayVersion = '11.8.0'
+        classpath("org.flywaydb:flyway-core:${flywayVersion}")
+        classpath("org.flywaydb:flyway-database-postgresql:${flywayVersion}")
+    }
+}
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.2'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.flywaydb.flyway' version '11.8.0'
 }
 
 group = 'cn.ghx.xboot'
@@ -18,9 +31,25 @@ configurations {
 }
 
 repositories {
-//    mavenCentral()
     mavenLocal()
     maven {url 'https://mirrors.huaweicloud.com/repository/maven/'}
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.baomidou:mybatis-plus-bom:3.5.12"
+    }
+}
+
+// 新增 Flyway 配置
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/xboot' // 数据库连接 URL
+    user = 'xboot' // 数据库用户名
+    password = 'xboot@1234.' // 数据库密码
+    locations = ["classpath:db/migration"] // SQL 迁移脚本存放位置
+    baselineOnMigrate = false // 若数据库无 Flyway 元数据表，自动创建并设置基线
+    cleanDisabled = false
 }
 
 dependencies {
@@ -30,22 +59,26 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     // fix @EnableWebSecurity(debug = true) 引起的问题
-    implementation 'org.springframework.security:spring-security-config:6.2.2'
+//    implementation 'org.springframework.security:spring-security-config:6.2.2'
 
-    runtimeOnly 'org.flywaydb:flyway-core:9.22.3' // 这个匹配springboot版本
-    implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.5'
-    implementation 'org.redisson:redisson-spring-boot-starter:3.27.0'
+    // flyway
+    def flywayVersion = '11.8.0'
+    runtimeOnly "org.flywaydb:flyway-core:${flywayVersion}"
+    runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
+    // mybatis
+    implementation 'com.baomidou:mybatis-plus-spring-boot3-starter'
+    implementation 'com.baomidou:mybatis-plus-jsqlparser'
+    // redisson
+    implementation 'org.redisson:redisson-spring-boot-starter:3.46.0'
     // hutool
-    def hutoolVersion = '5.8.25'
+    def hutoolVersion = '5.8.37'
     implementation "cn.hutool:hutool-core:${hutoolVersion}"
     implementation "cn.hutool:hutool-crypto:${hutoolVersion}"
     implementation "cn.hutool:hutool-jwt:${hutoolVersion}"
     implementation "cn.hutool:hutool-captcha:${hutoolVersion}"
 
     // fix DatatypeConverter
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.1'
-
-
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

@@ -4,12 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ghx.xboot.mapper.UserMapper">
 
+
     <select id="getUserMenu" resultType="cn.ghx.xboot.menu.Menu">
-        select m.*
+        select distinct m.*
         from t_menu m
                  inner join t_role_menu rm on (rm.menu_id = m.id)
-                 inner join t_user u on (u.role_id = rm.role_id)
-        where u.id = #{userId}
+                 inner join t_user_role ur on (ur.role_id = rm.role_id)
+        where ur.user_id = #{userId}
         order by m.code, m.sort
+    </select>
+    <select id="query" resultType="cn.ghx.xboot.user.User">
+        select u.* from t_user u
+        <if test="roleId!= null and roleId!= ''">
+            inner join t_user_role ur on (ur.user_id = u.id)
+        </if>
+        <if test="groupId != null and groupId != '' ">
+            inner join t_user_group ug on (ug.user_id = u.id)
+        </if>
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (
+                u.name like concat('%',#{keyword},'%') or
+                u.phone like concat('%',#{keyword},'%') or
+                u.username like concat('%',#{keyword},'%')
+                )
+            </if>
+            <if test="roleId != null and roleId != ''">
+                and ur.role_id = #{roleId}
+            </if>
+            <if test="groupId != null and groupId != '' ">
+                and ug.group_id = #{groupId}
+            </if>
+        </where>
+    </select>
+    <select id="getUserRoles" resultType="cn.ghx.xboot.role.Role">
+        select r.*
+        from t_role r
+                 inner join t_user_role ur on (ur.role_id = r.id)
+        where ur.user_id = #{userId}
     </select>
 </mapper>

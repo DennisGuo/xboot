@@ -34,7 +34,7 @@ public class Menu implements Serializable {
     private String name;
 
     /**
-     * 类型：0=菜单,1=页面,2=按钮
+     * 类型：0=模块,1=菜单,2=页面,3=按钮
      */
     private Integer type;
 
@@ -72,6 +72,10 @@ public class Menu implements Serializable {
      * 图标的名称
      */
     private String icon;
+    /**
+     * 是否隐藏
+     */
+    private Boolean hidden;
 
     /**
      * 子菜单

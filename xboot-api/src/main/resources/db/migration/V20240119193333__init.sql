@@ -6,9 +6,9 @@ create table t_group
     name        varchar,
     code        varchar,
     remark      varchar,
-    sort      integer default 0,
+    sort        integer   default 0,
     create_time timestamp default CURRENT_TIMESTAMP,
-    pid   varchar
+    pid         varchar
         constraint t_group_fk
             references t_group
             on delete cascade
@@ -62,11 +62,7 @@ create table t_user
             unique,
     remark      varchar,
     sex         integer   default 0,
-    password    varchar,
-    role_id     varchar
-        constraint t_user_fk
-            references t_role
-            on delete set null
+    password    varchar
 );
 
 comment on table t_user is '用户表';
@@ -87,7 +83,28 @@ comment on column t_user.sex is '性别: 0=男,1=女';
 
 comment on column t_user.password is '密码';
 
-comment on column t_user.role_id is '角色ID';
+-- DROP TABLE t_user_role;
+
+CREATE TABLE t_user_role
+(
+    id          varchar                             NOT NULL, -- id
+    create_time timestamp DEFAULT CURRENT_TIMESTAMP NULL,     -- 创建时间
+    create_by   varchar                             NULL,     -- 创建人ID
+    user_id     varchar                             NULL,     -- 用户ID
+    role_id     varchar                             NULL,     -- 角色ID
+    CONSTRAINT t_user_role_pk PRIMARY KEY (id),
+    CONSTRAINT t_user_role_t_role_fk FOREIGN KEY (role_id) REFERENCES t_role (id) ON DELETE CASCADE,
+    CONSTRAINT t_user_role_t_user_fk FOREIGN KEY (user_id) REFERENCES t_user (id) ON DELETE CASCADE
+);
+COMMENT ON TABLE t_user_role IS '用户角色关系表';
+
+-- Column comments
+
+COMMENT ON COLUMN t_user_role.id IS 'id';
+COMMENT ON COLUMN t_user_role.create_time IS '创建时间';
+COMMENT ON COLUMN t_user_role.create_by IS '创建人ID';
+COMMENT ON COLUMN t_user_role.user_id IS '用户ID';
+COMMENT ON COLUMN t_user_role.role_id IS '角色ID';
 
 
 create table t_group_user
@@ -207,6 +224,7 @@ create table t_menu
     component   varchar,
     icon        varchar,
     sort        integer   default 0,
+    hidden      bool      default false,
     CONSTRAINT t_menu_fk FOREIGN KEY (pid) REFERENCES t_menu (id) ON DELETE CASCADE
 );
 
@@ -218,7 +236,7 @@ comment on column t_menu.create_time is '创建时间';
 
 comment on column t_menu.name is '名称';
 
-comment on column t_menu.type is '类型：0=菜单,1=页面,2=按钮';
+comment on column t_menu.type is '类型：0=模块,1=菜单,2=页面,3=按钮';
 
 comment on column t_menu.path is '路径';
 

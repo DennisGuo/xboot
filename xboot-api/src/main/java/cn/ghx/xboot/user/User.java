@@ -64,15 +64,6 @@ public class User implements Serializable {
      * 密码
      */
     private String password;
-    /**
-     * 角色ID
-     */
-    private String roleId;
 
-    /**
-     * 角色对象
-     */
-    @TableField(exist = false)
-    private Role role;
 
 }

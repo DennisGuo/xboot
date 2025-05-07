@@ -5,6 +5,7 @@ import cn.ghx.xboot.config.security.SecurityJwtParam;
 import cn.ghx.xboot.mapper.UserMapper;
 import cn.ghx.xboot.menu.Menu;
 import cn.ghx.xboot.menu.MenuService;
+import cn.ghx.xboot.role.Role;
 import cn.ghx.xboot.role.RoleService;
 import cn.ghx.xboot.user.dto.CaptchaDto;
 import cn.ghx.xboot.user.dto.LoginDto;
@@ -193,13 +194,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         boolean blocked = redisClient.getSetCache(REDIS_BLOCK_TOKEN).contains(token);
         Assert.isTrue(!blocked, "token已失效");
 
-        User rs = getById(userId);
-        String rid = rs.getRoleId();
-        if (StringUtils.hasText(rid)) {
-            rs.setRole(roleService.getById(rid));
-        }
-
-        return rs;
+        return getById(userId);
     }
 
     /**
@@ -223,29 +218,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
                             String roleId,
                             String groupId,
                             Integer page, Integer size) {
-        LambdaQueryChainWrapper<User> qw = lambdaQuery();
-
-        if (StringUtils.hasText(keyword)) {
-            qw.and(w -> {
-                w.like(User::getName, keyword).or()
-                        .like(User::getUsername, keyword).or()
-                        .like(User::getPhone, keyword);
-            });
-        }
-        if(StringUtils.hasText(roleId)){
-            qw.eq(User::getRoleId,roleId);
-        }
-        if(StringUtils.hasText(groupId)){
-            qw.exists("select 1 from t_group_user gu where gu.group_id = {0} and gu.user_id = id ",groupId);
-        }
-        Page<User> rs = qw.page(Page.of(page, size));
-        rs.getRecords().forEach(i->{
-            String rid = i.getRoleId();
-            if (StringUtils.hasText(rid)) {
-                i.setRole(roleService.getById(rid));
-            }
-        });
-        return  rs;
+        return baseMapper.query(keyword,roleId,groupId,Page.of(page,size));
     }
 
     public CaptchaDto createCaptcha() {
@@ -276,6 +249,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         me.setPassword(passwordEncoder.encode(vo.getNewPwd()));
         return saveOrUpdate(me);
 
+    }
+
+    public List<Role> getMeRoles() {
+        String userId = BaseContext.getUserId();
+        Assert.hasText(userId, "无效用户");
+        return baseMapper.getUserRoles(userId);
     }
 
 
