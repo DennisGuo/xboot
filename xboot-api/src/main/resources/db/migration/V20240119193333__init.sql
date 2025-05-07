@@ -227,6 +227,7 @@ create table t_setting
     update_time timestamp default CURRENT_TIMESTAMP,
     code        varchar not null unique,
     name        varchar,
+    type        varchar default 'text',
     content     varchar,
     is_sys      boolean   default false
 );
@@ -237,4 +238,5 @@ comment on column t_setting.create_time is '创建时间';
 comment on column t_setting.code is '编码';
 comment on column t_setting.name is '名称';
 comment on column t_setting.content is '配置内容';
+comment on column t_setting.type is '配置类型：text,number,image,json';
 comment on column t_setting.is_sys is '系统必须';

@@ -76,8 +76,8 @@ INSERT INTO t_user_role (id, create_time, create_by, user_id, role_id)
 VALUES ('1', '2024-11-14 14:27:14.561', NULL, 'a86f31e692437acc1a94cea26866927e', 'admin');
 
 
-INSERT INTO t_setting (id, create_time, code, "name", "content", is_sys)
-VALUES ('1797823457621229569', '2024-06-04 10:58:09.611', 'COPYRIGHT', '版权名称', 'x-xi.cn', true),
-       ('1797823799738023937', '2024-06-04 10:58:09.623', 'MAP_CENTER', '地图中心点', '105.59472,29.484125', true),
-       ('1797823928901615618', '2024-06-04 10:58:09.625', 'MAP_ZOOM', '地图初始层级', '16', true),
-       ('1797823928901615617', '2024-06-04 10:58:09.625', 'SYS_TITLE', '系统名称', 'xboot', true);
+INSERT INTO t_setting (id, create_time, code, "name", "content", is_sys,type)
+VALUES ('1797823457621229569', '2024-06-04 10:58:09.611', 'COPYRIGHT', '版权名称', 'x-xi.cn', true,'text'),
+       ('1797823928901615618', '2024-06-04 10:58:09.625', 'LOGIN_BG', '登录页背景图', './images/login-bg.jpg', true,'image'),
+       ('1797823928901615638', '2024-06-04 10:58:09.625', 'LOGIN_COVER', '登录封图', './images/login.png', true,'image'),
+       ('1797823928901615617', '2024-06-04 10:58:09.625', 'SYS_TITLE', '系统名称', 'xboot', true,'text');

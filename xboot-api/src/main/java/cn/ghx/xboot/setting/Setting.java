@@ -36,6 +36,11 @@ public class Setting extends BaseEntity {
     private String content;
 
     /**
+     * 配置类型, text=文本, number=数字, json=json, image=图片, file=文件
+     */
+    private String type = "text";
+
+    /**
      * 系统必须
      */
     private Boolean isSys;
