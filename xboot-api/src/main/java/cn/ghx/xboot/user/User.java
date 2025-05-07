@@ -1,5 +1,6 @@
 package cn.ghx.xboot.user;
 
+import cn.ghx.xboot.common.BaseEntity;
 import cn.ghx.xboot.role.Role;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -12,28 +13,21 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 用户表
  *
  * @TableName t_user
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value = "t_user")
 @Data
 @JsonIgnoreProperties(value = {
     "password"
 }, allowSetters = true)
-public class User implements Serializable {
-    /**
-     * id
-     */
-    @TableId(type = IdType.ASSIGN_UUID)
-    private String id;
+public class User extends BaseEntity {
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 姓名

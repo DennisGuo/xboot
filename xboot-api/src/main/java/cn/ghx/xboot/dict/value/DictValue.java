@@ -1,5 +1,6 @@
 package cn.ghx.xboot.dict.value;
 
+import cn.ghx.xboot.common.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,24 +8,17 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 字典项表
  * @TableName t_dict_value
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="t_dict_value")
 @Data
-public class DictValue implements Serializable {
-    /**
-     * id
-     */
-    @TableId
-    private String id;
+public class DictValue extends BaseEntity {
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 关联字典ID

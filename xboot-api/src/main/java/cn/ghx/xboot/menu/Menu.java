@@ -1,5 +1,6 @@
 package cn.ghx.xboot.menu;
 
+import cn.ghx.xboot.common.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,24 +10,17 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 菜单
  * @TableName t_menu
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="t_menu")
 @Data
-public class Menu implements Serializable {
-    /**
-     * id
-     */
-    @TableId
-    private String id;
+public class Menu extends BaseEntity {
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 名称

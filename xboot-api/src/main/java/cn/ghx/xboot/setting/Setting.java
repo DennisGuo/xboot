@@ -1,5 +1,6 @@
 package cn.ghx.xboot.setting;
 
+import cn.ghx.xboot.common.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,24 +8,17 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 配置内容
  * @TableName t_setting
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="t_setting")
 @Data
-public class Setting implements Serializable {
-    /**
-     * id
-     */
-    @TableId
-    private String id;
+public class Setting extends BaseEntity {
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 编码
@@ -45,7 +39,4 @@ public class Setting implements Serializable {
      * 系统必须
      */
     private Boolean isSys;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

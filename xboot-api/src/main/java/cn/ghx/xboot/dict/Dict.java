@@ -1,5 +1,6 @@
 package cn.ghx.xboot.dict;
 
+import cn.ghx.xboot.common.BaseEntity;
 import cn.ghx.xboot.dict.value.DictValue;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,24 +11,17 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 字典表
  * @TableName t_dict
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="t_dict")
 @Data
-public class Dict implements Serializable {
-    /**
-     * id
-     */
-    @TableId
-    private String id;
+public class Dict extends BaseEntity {
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 编码
