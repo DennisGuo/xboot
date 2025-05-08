@@ -63,6 +63,8 @@ const selectAll = (select = true) => {
   const allIds = [];
   loopTree(treeData.value, i => allIds.push(i.id))
   checkedKeys.value = select ? allIds : []
+
+  emit('checked', checkedKeys.value)
 }
 const expandAll = (select = true) => {
   const allIds = []; 

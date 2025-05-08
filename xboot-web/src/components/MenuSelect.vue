@@ -50,7 +50,7 @@ const init = async () => {
 
 const onChange = e=>{
   let rs = null
-  if(e.length > 0){
+  if(e && e.length > 0){
     rs = e[e.length -1]
   }
   emit('update:value',rs)
