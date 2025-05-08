@@ -1,5 +1,9 @@
 <template>
-  <div class="header flex-row">
+  <div class="header flex flex-row">
+    <div class="logo flex flex-row items-center gap-4 min-w-[200px] pl-[24px]">
+      <img :src="logo" v-if="logo"/>
+      <div class="text-white" v-if="title">{{ title }}</div>
+    </div>
     <!-- <div class="sider-collapse">
       <span class="text-white pointer" @click="toggleLeft">
         <MenuUnfoldOutlined v-if="global.siderCollapsed" />
@@ -38,12 +42,15 @@ import ProfileModal from "./ProfileModal.vue";
 import PasswordModal from "./PasswordModal.vue";
 import { useRoute, useRouter } from "vue-router";
 import * as Icons from "@ant-design/icons-vue";
+import { SYS_TITLE, SYS_TITLE_DEFAULT } from "@/common/const";
 
 const route = useRoute();
 const router = useRouter();
 const global = useGlobalStore();
 const modal = ref(null);
 const modules = ref([]);
+const title = ref('')
+const logo = ref()
 const items = [
   { label: "个人信息", key: "profile" },
   { label: "修改密码", key: "password" },
@@ -52,6 +59,12 @@ const items = [
 ];
 
 onMounted(() => {
+  global.getSetting(SYS_TITLE).then(it => {
+    title.value = it?.content || SYS_TITLE_DEFAULT
+  })
+  global.getSetting('LOGO').then(it => {
+    logo.value = it?.content || '/logo.png'
+  })
   load();
   parseModule();
 });
@@ -111,6 +124,13 @@ const onClick = ({ key }) => {
 <style lang="less" scoped>
 .header {
   gap: 16px;
+  .logo {
+    height: 64px;
+    line-height: 64px;
+    img {
+      height: 36px;
+    }
+  }
   .sider-collapse {
     font-size: 1.6em;
   }

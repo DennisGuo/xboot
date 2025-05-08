@@ -164,17 +164,14 @@ export const useGlobalStore = defineStore("global", () => {
   }
 
   // 获取所有配置
-
-  const getSettings = () => {
-    return new Promise(resolve => {
-      if (settings.value.length > 0) {
-        resolve(settings.value)
-      } else {
-        listSetting({ size: 1000 }).then(res => {
-          settings.value = res.data.records || [];
-          resolve(settings.value)
-        })
+  const settingQueue = new PQueue({ concurrency: 1 });
+  const getSettings = async (refresh=false) => {
+    return await settingQueue.add(async () => {
+      if(settings.value.length == 0 || refresh){
+        const res = await listSetting({ size: 1000 })
+        settings.value = res?.data?.records || [];
       }
+      return settings.value
     })
   }
   // 根据code获取配置

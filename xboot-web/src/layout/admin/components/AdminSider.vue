@@ -1,9 +1,5 @@
 <template>
-  <div class="sider">
-    <div class="logo">
-      <img :src="`/logo.png`" />
-      <div class="title flex1" v-if="!global.siderCollapsed">{{ title }}</div>
-    </div>
+  <div class="">    
     <a-menu mode="inline" theme="dark" :items="items" @click="onClickMenu" v-model:selectedKeys="current"
       v-model:openKeys="openKeys" />
   </div>
@@ -21,15 +17,12 @@ const items = ref([])
 const menusData = ref([])
 const current = ref([])
 const openKeys = ref([])
-const title = ref('')
+
 
 const route = useRoute()
 const router = useRouter()
 
-onMounted(() => {
-  global.getSetting(SYS_TITLE).then(it => {
-    title.value = it?.content || SYS_TITLE_DEFAULT
-  })
+onMounted(() => {  
   init()
 })
 
@@ -95,27 +88,4 @@ const onClickMenu = ({ key }) => {
 
 <style lang="less" scoped>
 @import url('@/assets/common.less');
-
-.sider {
-  .logo {
-    .flex-row();
-    height: 64px;
-    line-height: 64px;
-    padding: 1em;
-    color: #fff;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-
-
-    .title {
-      word-break: keep-all;
-      text-overflow: ellipsis;
-    }
-
-    img {
-      height: 36px;
-    }
-  }
-}
 </style>

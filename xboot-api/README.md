@@ -7,16 +7,6 @@
 - MybatisPlus
 
 
-## 编译
-
-```shell
-# 打包jar 
-./gradlew bootJar -x test
-
-# 打包docker 
-
-docker buildx build --platform=linux/amd64 -t dennisguo/xboot-api:latest . --push
-```
 
 ## 数据库初始化
 
@@ -28,8 +18,29 @@ create database xboot owner xboot;
 grant all privileges on database xboot to xboot;
 ```
 
+## 编译
+
+```shell
+# 运行
+./gradlew bootRun -x test
+
+# 打包jar 
+./gradlew bootJar -x test
+
+# 打包docker 
+docker buildx build --platform=linux/amd64 -t dennisguo/xboot-api:latest . --push
+```
+
+
 ## 其他
 
+### 修改包名之后需要调整的内容
+
+- MybatisConfig
+> @MapperScan("cn.ghx.xboot.mapper")
+
+- ExceptionConfig
+> @ControllerAdvice(basePackages = {"cn.ghx.xboot"})
 
 ### REDIS 的链接构造
 

@@ -1,15 +1,15 @@
 <template>
   <a-layout class="h100">
-    <a-layout-sider
-      v-model:collapsed="global.siderCollapsed"
-      :collapsible="true"
-    >
-      <AdminSider v-if="global.crtModule" />
-    </a-layout-sider>
-    <a-layout class="h100">
-      <a-layout-header style="padding-left: 5px">
-        <AdminHeader />
-      </a-layout-header>
+    <a-layout-header style="padding-left: 5px">
+      <AdminHeader />
+    </a-layout-header>
+    <a-layout>
+      <a-layout-sider
+        v-model:collapsed="global.siderCollapsed"
+        :collapsible="true"
+      >
+        <AdminSider v-if="global.crtModule" />
+      </a-layout-sider>
       <a-layout-content style="overflow-y: auto" class="admin-main">
         <router-view></router-view>
       </a-layout-content>
