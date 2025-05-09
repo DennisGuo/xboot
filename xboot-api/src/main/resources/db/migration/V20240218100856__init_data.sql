@@ -80,4 +80,5 @@ INSERT INTO t_setting (id, create_time, code, "name", "content", is_sys,type)
 VALUES ('1797823457621229569', '2024-06-04 10:58:09.611', 'COPYRIGHT', '版权名称', 'x-xi.cn', true,'text'),
        ('1797823928901615618', '2024-06-04 10:58:09.625', 'LOGIN_BG', '登录页背景图', '/images/login-bg.jpg', true,'image'),
        ('1797823928901615638', '2024-06-04 10:58:09.625', 'LOGIN_COVER', '登录封图', '/images/login.png', true,'image'),
+       ('1797823928901615628', '2024-06-04 10:58:09.625', 'LOGO', 'LOGO图片', '/logo.png', true,'image'),
        ('1797823928901615617', '2024-06-04 10:58:09.625', 'SYS_TITLE', '系统名称', 'xboot', true,'text');

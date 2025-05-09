@@ -224,7 +224,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public CaptchaDto createCaptcha() {
         String random = IdUtil.fastSimpleUUID();
         // ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
-        AbstractCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 100, 4);
+        AbstractCaptcha captcha = CaptchaUtil.createGifCaptcha(240, 100, 4);
         captcha.createCode();
         String image = captcha.getImageBase64Data();
         String code = captcha.getCode();
