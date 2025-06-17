@@ -120,7 +120,7 @@ export const useGlobalStore = defineStore("global", () => {
         const item = {
           path: m.path,
           name: m.code,
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true ,title: m.name}
         };
         if (m.type == 2 || m.component) {
           const cpath = m.component || `pages/${m.path}`

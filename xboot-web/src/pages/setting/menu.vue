@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="h2">菜单管理</div>
+     <PageBreadcrumb />
     <div class="padding bg-white mb flex-row">
       <div class="flex flex-1 flex-row gap-4">
         <a-radio-group v-model:value="searchState.type" button-style="solid">

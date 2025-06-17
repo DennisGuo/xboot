@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="h2">角色管理</div>
+     <PageBreadcrumb />
     <div class="flex-row gap">
       <a-card title="角色列表" style="width:300px">
         <template #extra>

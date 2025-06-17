@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="h2">字典管理</div>
+     <PageBreadcrumb />
     <div class="padding bg-white mb flex-row">
       <div class="flex1">
         <a-form layout="inline" :model="searchState" @finish="toSearch">

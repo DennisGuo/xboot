@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="h2">机构部门管理</div>
+     <PageBreadcrumb />
     <div class="flex-row gap">
       <a-card title="机构部门" style="width:380px">
         <template #extra>

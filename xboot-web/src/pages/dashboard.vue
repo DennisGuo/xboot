@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="h2">概览(示例，请修改)</div>
+    <PageBreadcrumb />
     <div class="stat-bar">
         <div class="item blue">
           <div class="icon"><img :src="`/icons/event.svg`" /></div>

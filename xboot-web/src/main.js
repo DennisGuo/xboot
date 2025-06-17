@@ -4,7 +4,7 @@ import './style.css'
 import '@/assets/common.less'
 import router from  './router'
 import { createPinia } from 'pinia';
-import Antd from 'ant-design-vue';
+
 import 'ant-design-vue/dist/reset.css';
 import * as Icons from '@ant-design/icons-vue'
 import {useGlobalStore} from '@/store/global'
@@ -17,7 +17,6 @@ Object.keys(Icons).forEach(key=>{
   app.component(key,Icons[key])
 })
 
-app.use(Antd)
 app.use(pinia)
 
 app.directive('auth',Auth)
