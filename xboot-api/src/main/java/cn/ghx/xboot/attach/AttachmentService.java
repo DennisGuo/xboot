@@ -4,7 +4,6 @@ import cn.ghx.xboot.attach.vo.Base64Image;
 import cn.ghx.xboot.mapper.AttachmentMapper;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.xml.bind.DatatypeConverter;
@@ -83,7 +82,7 @@ public class AttachmentService extends ServiceImpl<AttachmentMapper, Attachment>
                 response.setContentLength((int) file.length());
                 return (os) -> {
                     try (FileInputStream ins = new FileInputStream(file)) {
-                        IoUtil.copy(ins, os);
+                        ins.transferTo(os);
                         os.flush();
                     }
                 };
