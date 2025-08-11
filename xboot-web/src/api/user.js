@@ -83,3 +83,12 @@ export const removeUser = (id)=>{
   const url = `/api/user/${id}`
   return del(url)
 }
+/**
+ * 获取某个用户的角色列表
+ * @param {*} id 
+ * @returns 
+ */
+export const getUserRoles = (id)=>{
+  const url = `/api/user/roles`
+  return get(url,{id})
+}

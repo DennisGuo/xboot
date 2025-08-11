@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-     <PageBreadcrumb />
+    <PageBreadcrumb />
     <div class="padding bg-white mb flex-row">
       <div class="flex1">
         <a-form layout="inline" :model="searchState" @finish="toSearch">
@@ -29,7 +29,11 @@
           <a-tag :color="record.sex == 0 ? 'blue' : 'pink'">{{ record.sex == 0 ? '男' : '女' }}</a-tag>
         </template>
         <template v-if="column.key === 'role'">
-          <a-tag v-if="record.role">{{ record.role.name }}</a-tag>
+          <a-space v-if="record.roles && record.roles.length > 0 ">
+            <a-tag v-for="(role, idx) in record.roles" :key="idx">
+            {{ role.name }}
+            </a-tag>
+          </a-space>
           <span v-else>-</span>
         </template>
         <template v-if="column.key === 'action'">

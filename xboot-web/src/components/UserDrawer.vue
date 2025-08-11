@@ -20,8 +20,8 @@
           <a-radio :value="1">女</a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="角色" name="roleId">
-        <RoleSelect v-model:value="formState.roleId"></RoleSelect>
+      <a-form-item label="角色" name="roleIds">
+        <RoleSelect v-model:value="formState.roleIds" mode="multiple"></RoleSelect>
       </a-form-item>
       <a-form-item label="备注" name="remark">
         <a-textarea v-model:value="formState.remark" placeholder="请输入" />
@@ -38,7 +38,7 @@
 <script setup>
 import { reactive, onMounted, ref } from 'vue'
 import RoleSelect from './RoleSelect.vue'
-import { saveUser } from '@/api/user';
+import { saveUser,getUserRoles } from '@/api/user';
 import { message } from 'ant-design-vue'
 import { confirm } from '@/mixin'
 
@@ -62,7 +62,7 @@ onMounted(() => {
   parseItem()
 })
 
-const parseItem = () => {
+const parseItem = async () => {
   const it = props.item
   if (it) {
     formState.username = it.username
@@ -70,14 +70,20 @@ const parseItem = () => {
     formState.phone = it.phone
     formState.sex = it.sex
     formState.remark = it.remark
-    formState.roleId = it.roleId
+    if(it.id){
+
+      const res = await getUserRoles(it.id)
+      if(res.data){
+        formState.roleIds = res.data.map(i=>i.id)
+      }
+    }
   } else {
     formState.username = null
     formState.name = null
     formState.phone = null
     formState.sex = null
     formState.remark = null
-    formState.roleId = null
+    formState.roleIds = []
   }
   formState.password = null
 }
@@ -88,13 +94,16 @@ const onClose = () => {
 
 const toSave = () => {
   formRef.value.validate().then(values => {
-    
+    const pay = {...values}
+    if(props.item){
+      pay.id = props.item.id
+    }
+    console.log(pay);
+
     confirm('您确定要保存用户信息吗?',async ()=>{
-      if(props.item){
-        values.id = props.item.id
-      }
+
       saving.value = true
-      const res = await saveUser(values)
+      const res = await saveUser(pay)
       saving.value = false
       if(res.data){
         message.success('保存成功')

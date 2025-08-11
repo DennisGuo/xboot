@@ -5,7 +5,7 @@
       <a-flex horizontal class="login-box">
         <div class="cover" :style="`background-image: url(${loginCover})`" v-if="loginCover"></div>
         <div class="form">
-          <h2 class="h2">{{ title }}</h2>
+          <h2 class="h2">{{ global.title }}</h2>
           <p class="slogan">欢迎登录</p>
           <a-form layout="vertical" :model="form" @submit="handleSubmit">
             <a-form-item>
@@ -32,7 +32,7 @@
               <a-button type="primary" html-type="submit">登录</a-button>
             </a-form-item>
           </a-form>
-          <div class="copyright">{{ date }} &copy; {{ copyright }}</div>
+          <div class="copyright">{{ date }} &copy; {{ global.copyright }} <br/> {{ global.version }}</div> 
         </div>
       </a-flex>
     </a-layout-content>
@@ -47,7 +47,6 @@ import dayjs from 'dayjs'
 import { getCaptcha, login } from '@/api/user'
 import { message } from 'ant-design-vue'
 import { md5 } from 'js-md5';
-import { COPYRIGHT, COPYRIGHT_DEFAULT, SYS_TITLE, SYS_TITLE_DEFAULT } from '@/common/const'
 
 const global = useGlobalStore()
 const form = reactive({})
@@ -56,24 +55,19 @@ const date = dayjs().format('YYYY')
 const router = useRouter()
 const route = useRoute()
 const captcha = ref(null)
-const title = ref('')
-const copyright = ref('')
+
 const loginBg = ref()
 const loginCover = ref()
 
 onMounted(() => {
   // initBg()
   loadCaptcha()
-  const keys = [SYS_TITLE,COPYRIGHT,'LOGIN_BG','LOGIN_COVER']
+  const keys = ['LOGIN_BG','LOGIN_COVER']
   global.getSetting(keys).then(arr=>{
     if(arr.length == keys.length){
-      title.value = arr.filter(i=>i.code == SYS_TITLE)[0].content
-      copyright.value = arr.filter(i=>i.code == COPYRIGHT)[0].content 
+      
       loginBg.value = arr.filter(i=>i.code == 'LOGIN_BG')[0].content
       loginCover.value = arr.filter(i=>i.code == 'LOGIN_COVER')[0].content
-    }else{
-      title.value = SYS_TITLE_DEFAULT
-      copyright.value = COPYRIGHT_DEFAULT
     }
   })
 })

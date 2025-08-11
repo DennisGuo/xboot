@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { KEY_AC_TOKEN, KEY_RF_TOKEN, KEY_EX_TIME } from "@/common/const";
+import { KEY_AC_TOKEN, KEY_RF_TOKEN, KEY_EX_TIME,SYS_TITLE_DEFAULT, COPYRIGHT_DEFAULT } from "@/common/const";
 import * as UserApi from "@/api/user";
 import { listSetting } from "@/api/setting"
 import router from "@/router";
@@ -11,6 +11,8 @@ import PQueue from 'p-queue';
 const modules = import.meta.glob("@/pages/**/*.vue");
 
 export const useGlobalStore = defineStore("global", () => {
+
+  const version = import.meta.env.APP_VERSION || '1.0.0'
 
   // 侧边栏是否收起
   const siderCollapsed = ref(false);
@@ -24,6 +26,8 @@ export const useGlobalStore = defineStore("global", () => {
   const settings = ref([]);
   // 当前模块
   const crtModule = ref(null);
+  const title = ref(SYS_TITLE_DEFAULT)
+  const copyright = ref(COPYRIGHT_DEFAULT)
 
   /**
    * 获取当前用户
@@ -212,6 +216,9 @@ export const useGlobalStore = defineStore("global", () => {
 
 
   return {
+    version,
+    title,
+    copyright,
     me,
     meMenu,
     siderCollapsed,
