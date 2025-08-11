@@ -9,17 +9,20 @@ import cn.ghx.xboot.role.Role;
 import cn.ghx.xboot.role.RoleService;
 import cn.ghx.xboot.user.dto.CaptchaDto;
 import cn.ghx.xboot.user.dto.LoginDto;
+import cn.ghx.xboot.user.dto.UserDto;
 import cn.ghx.xboot.user.vo.ChangePasswordVo;
 import cn.ghx.xboot.user.vo.LoginVo;
+import cn.ghx.xboot.user.vo.UserSaveVo;
 import cn.hutool.captcha.AbstractCaptcha;
 import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.ShearCaptcha;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +32,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author ghx
@@ -146,10 +154,18 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @param user
      * @return
      */
-    public Boolean saveItem(User user) {
+    /**
+     * 更新或者创建用户
+     *
+     * @param user
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean saveItem(UserSaveVo user) {
+        boolean rs = true;
         if (StringUtils.hasText(user.getId())) {
             // 更新
-            return saveOrUpdate(user);
+            rs = saveOrUpdate(user);
         } else {
             // 创建
             String pwd = user.getPassword();
@@ -157,8 +173,24 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             Assert.hasText(pwd, "密码不能为空");
             String md5 = SecureUtil.md5(pwd);
             user.setPassword(passwordEncoder.encode(md5));
-            return save(user);
+            rs = save(user);
         }
+        // 存储角色
+        List<String> roleIds = user.getRoleIds();
+        if(CollUtil.isNotEmpty(roleIds)) {
+            rs = setUserRoles(user.getId(), roleIds);
+        }
+
+        return rs;
+    }
+
+    public Boolean setUserRoles(String id, List<String> roleIds) {
+        removeUserRoles(id);
+        return baseMapper.saveUserRoles(id,roleIds, BaseContext.getUserId());
+    }
+
+    public Boolean removeUserRoles(String id) {
+        return baseMapper.removeUserRoles(id);
     }
 
     /**
@@ -214,11 +246,26 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return list;
     }
 
-    public Page<User> query(String keyword,
-                            String roleId,
-                            String groupId,
-                            Integer page, Integer size) {
-        return baseMapper.query(keyword,roleId,groupId,Page.of(page,size));
+
+    public Page<UserDto> query(String keyword,
+                               String roleId,
+                               String groupId,
+                               Integer page, Integer size) {
+
+        Page<User> res =  baseMapper.query(keyword,roleId,groupId,Page.of(page,size));
+        Page<UserDto> rs = Page.of(page,size);
+        rs.setRecords(wrapDto(res.getRecords()));
+        rs.setTotal(res.getTotal());
+        return rs;
+    }
+
+    private List<UserDto> wrapDto(List<User> records) {
+        return records.stream().map(u->{
+            UserDto dto = new UserDto();
+            BeanUtil.copyProperties(u,dto, CopyOptions.create().setIgnoreNullValue(true));
+            dto.setRoles(getUserRoles(u.getId()));
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     public CaptchaDto createCaptcha() {
@@ -256,7 +303,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         Assert.hasText(userId, "无效用户");
         return baseMapper.getUserRoles(userId);
     }
-
+    public List<Role> getUserRoles(String id) {
+        return baseMapper.getUserRoles(id);
+    }
 
 }
 

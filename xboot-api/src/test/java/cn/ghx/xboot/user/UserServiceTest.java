@@ -1,6 +1,7 @@
 package cn.ghx.xboot.user;
 
 import cn.ghx.xboot.TestBase;
+import cn.ghx.xboot.user.vo.UserSaveVo;
 import cn.hutool.crypto.SecureUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class UserServiceTest extends TestBase {
 
     @Test
     public void save(){
-        User user =new User();
+        UserSaveVo user =new UserSaveVo();
         user.setName("管理员");
         user.setPassword("qwer1234");
         user.setUsername("admin");

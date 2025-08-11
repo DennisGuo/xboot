@@ -1,6 +1,6 @@
-package cn.huitao.forest.uav.prevention.user.vo;
+package cn.ghx.xboot.user.vo;
 
-import cn.huitao.forest.uav.prevention.user.User;
+import cn.ghx.xboot.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

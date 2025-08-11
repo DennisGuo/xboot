@@ -1,7 +1,7 @@
-package cn.huitao.forest.uav.prevention.user.dto;
+package cn.ghx.xboot.user.dto;
 
-import cn.huitao.forest.uav.prevention.role.Role;
-import cn.huitao.forest.uav.prevention.user.User;
+import cn.ghx.xboot.role.Role;
+import cn.ghx.xboot.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

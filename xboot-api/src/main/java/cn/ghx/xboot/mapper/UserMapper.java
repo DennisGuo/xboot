@@ -6,6 +6,7 @@ import cn.ghx.xboot.user.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -21,6 +22,11 @@ public interface UserMapper extends BaseMapper<User> {
                      @Param("groupId") String groupId, Page<User> page);
 
     List<Role> getUserRoles(@Param("userId")String userId);
+
+    @Update("delete from t_user_role where user_id = #{userId}")
+    Boolean removeUserRoles(@Param("userId") String id);
+
+    Boolean saveUserRoles(@Param("userId")String id, @Param("roleIds") List<String> roleIds, @Param("createBy") String createBy);
 }
 
 

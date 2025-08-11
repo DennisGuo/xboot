@@ -6,11 +6,11 @@ import cn.ghx.xboot.menu.Menu;
 import cn.ghx.xboot.role.Role;
 import cn.ghx.xboot.user.dto.CaptchaDto;
 import cn.ghx.xboot.user.dto.LoginDto;
-import cn.ghx.xboot.user.group.UserGroup;
+import cn.ghx.xboot.user.dto.UserDto;
 import cn.ghx.xboot.user.vo.ChangePasswordVo;
 import cn.ghx.xboot.user.vo.LoginVo;
+import cn.ghx.xboot.user.vo.UserSaveVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +30,7 @@ public class UserController {
     public static final String GET_ME_MENU = "/me/menu";
     public static final String GET_ME_ROLES = "/me/roles";
     public static final String GET_LIST = "/list";
+    public static final String GET_ROLES = "/roles";
     public static final String POST = "";
 
     private final UserService service;
@@ -37,7 +38,10 @@ public class UserController {
     public UserController(UserService service) {
         this.service = service;
     }
-
+    @GetMapping(GET_ROLES)
+    public  Result<List<Role>> getRoles(@RequestParam String id) {
+        return Result.success(service.getUserRoles(id));
+    }
     @DeleteMapping(DELETE)
     public Result<Boolean> remove(@PathVariable String id){
         return Result.success(service.removeById(id));
@@ -48,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping(POST)
-    public Result<Boolean> save(@RequestBody User item){
+    public Result<Boolean> save(@RequestBody UserSaveVo item){
         return Result.success(service.saveItem(item));
     }
     @GetMapping(GET_CAPTCHA)
@@ -57,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping(GET_LIST)
-    public Result<Page<User>> getList(
+    public Result<Page<UserDto>> getList(
             @RequestParam(required = false) String keyword ,
             @RequestParam(required = false) String roleId ,
             @RequestParam(required = false) String groupId ,
