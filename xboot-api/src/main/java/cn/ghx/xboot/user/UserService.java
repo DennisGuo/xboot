@@ -83,13 +83,13 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      */
     public LoginDto login(LoginVo vo) {
         log.debug("登录: {} ", vo.toString());
-        RMapCache<Object, Object> mapCache = redisClient.getMapCache(REDIS_CAPTCHA);
+        RMapCache<String, String> mapCache = redisClient.getMapCache(REDIS_CAPTCHA);
         String random = vo.getRandom();
         try {
             // 验证码
             String codeErr = "验证码无效";
             Assert.hasText(random, codeErr);
-            String code = (String) mapCache.get(random);
+            String code = mapCache.get(random);
             log.debug("验证码：{}", code);
             Assert.isTrue(StringUtils.hasText(code) && code.equalsIgnoreCase(vo.getCode()), codeErr);
             // 用户密码
@@ -119,7 +119,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         String refreshToken = IdUtil.fastSimpleUUID();
 
         // redis
-        redisClient.getMap(REDIS_REFRESH_TOKEN).put(refreshToken, user.getId());
+        RMapCache<String, String> cache = redisClient.getMapCache(REDIS_REFRESH_TOKEN);
+        cache.put(refreshToken, user.getId(),jwtParam.getExpiredRefresh(),TimeUnit.SECONDS);
 
         return new LoginDto(token, refreshToken, jwtParam.getExpired());
     }
@@ -200,7 +201,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @return
      */
     public LoginDto refresh(String refreshToken) {
-        String userId = (String) redisClient.getMap(REDIS_REFRESH_TOKEN).get(refreshToken);
+        RMapCache<String, String> cache = redisClient.getMapCache(REDIS_REFRESH_TOKEN);
+        String userId = cache.get(refreshToken);
         Assert.hasText(userId, "无效的refreshToken");
         User user = getById(userId);
         Assert.notNull(user, "无效用户");
@@ -277,7 +279,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         String code = captcha.getCode();
 
         // 写入缓存中
-        redisClient.getMapCache(REDIS_CAPTCHA).put(random, code, captchaExpired, TimeUnit.SECONDS);
+        RMapCache<String, String> cache = redisClient.getMapCache(REDIS_CAPTCHA);
+        cache.put(random, code, captchaExpired, TimeUnit.SECONDS);
         log.debug("验证码，random={},code={}", random, code);
         return new CaptchaDto(random, image);
     }
